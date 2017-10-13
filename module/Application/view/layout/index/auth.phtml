@@ -1,0 +1,107 @@
+<style>
+    #add-new #expand_for_user {
+        float: right;
+        cursor: pointer !important;
+        list-style: none;
+        margin-right: 5px;
+    }
+
+    #add-new {
+        float: right;
+        width: 25%;
+        height: auto;
+        text-align: left;
+    }
+    #admin-setting {
+        display: none;
+        position: fixed;
+        width: 320px;
+        height: auto;
+        right: 10%;
+        background: url(<?php echo $this->basePath(); ?>/images/icon-admindown.png) top right no-repeat;
+        background-color: #FFF;
+        box-shadow: 0 0 10px #888;
+        border: 1px solid #2d353c;
+        border-top: 3px solid #2d353c;
+        color: #000;
+        text-align: left;
+        padding: 15px;
+        font-size: 13px;
+        font-weight: 400;
+        line-height: 25px;
+        z-index: 9999;
+        top:10%;
+    }
+    #admin-setting li{
+        list-style: none;
+    }
+    #admin-setting .a_li{ 
+        height: 40px;
+    }
+    #admin-setting .a_img {
+        float: left;
+        padding: 10px 0 0 15px;
+    }
+    #admin-setting .a_text {
+        float: left;
+        padding: 8px 0 0 15px;
+    }
+    #admin-setting .a_li:hover{
+        background-color:#d5d5d5;
+        border-radius:4px;
+        cursor:pointer;
+    }
+</style>
+<?php
+//$auth = Zend_Auth::getInstance();
+if (false) {//$auth->hasIdentity()) {
+    $identity = $auth->getIdentity();
+    ?>
+
+    <div id="add-new">
+        <li class="but-add" id="expand_for_user">
+            <img src="<?php echo $this->basePath(); ?>/images/icon/icon-user.png" style="width: 50px;height: 50px;">
+        </li>
+    </div>
+    <div id="admin-setting">
+        <li class="a_li" style="cursor: auto;text-align: center;" id="danh_xung_full_name"><b><?php echo $identity['danh_xung'] . ' ' . $identity['full_name']; ?></b></li>
+        <li class="a_li" id="changePassword"><p class="a_text">Đổi mật khẩu</p></li>
+        <li onclick="window.location = '<?php echo $this->basePath('/default/index/logout'); ?>';" class="a_li"><p class="a_text">Sign out</p></li>
+    </div>
+    <?php
+} else {
+    echo '<div style="float: right;margin-right: 10px;cursor: pointer;background-color: #006666;padding: 5px;border-radius: 5px;margin-bottom: 10px;color: white;" id="a_login">Sign in</div>';
+}
+?>
+<script type="text/javascript">
+    jQuery(function ($) {
+        $("#expand_for_user").click(function () {
+            if ($("#admin-setting").is(":visible")) {
+                $("#setting").next().hide(500);
+                $("#admin-setting").hide(500);
+                if ($("div.back_button").length > 0) {
+                    $("div.back_button").show();
+                }
+
+            } else {
+                $("#admin-setting").show(500);
+                $("div.back_button").hide();
+            }
+        });
+        $(document).click(function (event) {
+            if ($(event.target).closest('#expand_for_user').get(0) == null && $(event.target).closest('li#setting').get(0) == null && $(event.target).closest('li#danh_xung_full_name').get(0) == null) {
+                $("#setting").next().hide(500);
+                $("#admin-setting").hide(500);
+                if ($("div.back_button").length > 0) {
+                    $("div.back_button").show();
+                }
+            }
+        });
+        $("#a_login").mouseenter(function () {
+            $(this).css({'background-color': 'blue', 'color': 'black'});
+        });
+        $("#a_login").mouseout(function () {
+            $(this).css({'background-color': '#006666', 'color': 'white'});
+        });
+    });
+</script>

@@ -1,0 +1,37 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Jul 5, 2014, 12:30:17 PM
+    Author     : chanhduypq
+*/
+@font-face {
+    font-family: fontForHeader;
+    src: url(font/LCALLIG.TTF);
+}
+div.language{
+    padding: 5px;
+    float: right;
+    margin-right: 5px;
+    border:2px solid;
+    border-radius:25px;
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.15), 0 2px 0 #F60;
+    font-style: italic;
+}
+div.vietnamese{
+    background: black;    
+}
+div.english{
+    background: #363636;    
+}
+div.chinese{
+    background: #924816;    
+}
+div.language a{
+    color: white;
+    cursor: pointer;
+    text-decoration: none;    
+}
+
