@@ -16,10 +16,13 @@ use Zend\View\Model\ViewModel;
 class IndexController extends AbstractActionController {
 
     public function indexAction() {
-        $model = new \Application\Model\Table();
-        $model->setTableName('home_content');
+        $model = new \Application\Model\Table('home_content');
         $rows = $model->getAll();
         $row = $rows[0];
+        
+//        $model = new \Application\Model\Table('user');
+//        $rows = $model->select("email = 'cuongchp@gmail.com' and password='". sha1('123456')."'")->current();//->toArray();
+//        var_dump((array)$rows);
         return new ViewModel(array('content' => $row['content']));
     }
 
@@ -30,13 +33,14 @@ class IndexController extends AbstractActionController {
     public function loginAction() {
         $username = $this->getRequest()->getPost('username', null);
         $password = $this->getRequest()->getPost('password', null);
-        $index = new Admin_Model_IndexMapper();
-        if ($index->login($username, $password)) {
+        $model = new \Application\Model\Table('user');
+        $rows = $model->select("email = '$username' and password='". sha1($password)."'")->toArray();
+        if (is_array($rows)&&count($rows)>0) {
             echo '';
         } else {
             echo 'error';
         }
-        return;
+        return $this->getResponse();
     }
 
     public function logoutAction() {
