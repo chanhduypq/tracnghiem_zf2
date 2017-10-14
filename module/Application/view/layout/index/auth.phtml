@@ -52,10 +52,11 @@
         cursor:pointer;
     }
 </style>
-<?php
-//$auth = Zend_Auth::getInstance();
-if (false) {//$auth->hasIdentity()) {
-    $identity = $auth->getIdentity();
+<?php 
+use Zend\Session\Container;
+$session = new Container('base');
+if ($session->offsetExists('user')) {
+    $identity = $session->offsetGet('user');
     ?>
 
     <div id="add-new">

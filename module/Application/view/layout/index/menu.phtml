@@ -1,7 +1,9 @@
-<?php
+<?php 
+use Zend\Session\Container;
+$session = new Container('base');
+
 $menu_items = $GLOBALS['menu_items'];
-//$auth = Zend_Auth::getInstance();
-if (true) {//$auth->hasIdentity()) {
+if ($session->offsetExists('user')) {
     $hrefThi = $this->basePath('/application/thi');
     $hrefReview = $this->basePath('/application/review');
     $idReview = $idThi = '';

@@ -12,6 +12,7 @@ namespace Application\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
+use Zend\Session\Container;
 
 class IndexController extends AbstractActionController {
 
@@ -19,10 +20,6 @@ class IndexController extends AbstractActionController {
         $model = new \Application\Model\Table('home_content');
         $rows = $model->getAll();
         $row = $rows[0];
-        
-//        $model = new \Application\Model\Table('user');
-//        $rows = $model->select("email = 'cuongchp@gmail.com' and password='". sha1('123456')."'")->current();//->toArray();
-//        var_dump((array)$rows);
         return new ViewModel(array('content' => $row['content']));
     }
 
@@ -37,6 +34,8 @@ class IndexController extends AbstractActionController {
         $rows = $model->select("email = '$username' and password='". sha1($password)."'")->toArray();
         if (is_array($rows)&&count($rows)>0) {
             echo '';
+            $session = new Container('base');
+            $session->offsetSet('user', $rows[0]);
         } else {
             echo 'error';
         }
@@ -44,14 +43,14 @@ class IndexController extends AbstractActionController {
     }
 
     public function logoutAction() {
-        $auth = Zend_Auth::getInstance();
-        $auth->clearIdentity();
+        $session = new Container('base');
+        $session->offsetSet('user', NULL);
         $this->_helper->redirector('index', 'index', 'default');
     }
 
     public function logoutajaxAction() {
-        $auth = Zend_Auth::getInstance();
-        $auth->clearIdentity();
+        $session = new Container('base');
+        $session->offsetSet('user', NULL);
         exit;
     }
 
