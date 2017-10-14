@@ -45,7 +45,7 @@ class IndexController extends AbstractActionController {
     public function logoutAction() {
         $session = new Container('base');
         $session->offsetSet('user', NULL);
-        $this->_helper->redirector('index', 'index', 'default');
+        return $this->redirect()->toUrl('/');   
     }
 
     public function logoutajaxAction() {
