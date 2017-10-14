@@ -3,7 +3,6 @@
 namespace Application\Model;
 
 use Zend\Db\TableGateway\AbstractTableGateway;
-use Zend\Db\Adapter\Adapter;
 
 /**
  * Album model
@@ -22,7 +21,7 @@ class Table extends AbstractTableGateway {
 
     public function get($id) {
         $id = (int) $id;
-        return $this->select("id = " . $id)->toArray();
+        return (array)($this->select("id = " . $id)->current());
     }
 
     public function getAll() {
