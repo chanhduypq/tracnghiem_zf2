@@ -12,10 +12,10 @@ $bg = $this->bg;
                     <?php
                     if ($bg['bg'] != "") {
                         
-                        Core_Common_Image::echoImage($this->baseUrl($bg['bg']), 70, 70, 'height');
+                        Core_Common_Image::echoImage($this->basePath($bg['bg']), 70, 70, 'height');
                     } else {
                         ?>
-                        <img alt="" src="<?php echo $this->baseUrl('/images/img_photo01.jpg'); ?>">
+                        <img alt="" src="<?php echo $this->basePath('/images/img_photo01.jpg'); ?>">
                         <?php
                     }
                     ?>

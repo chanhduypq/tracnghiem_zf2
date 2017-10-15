@@ -1,10 +1,10 @@
 <?php 
-$auth = Zend_Auth::getInstance();
-if ($auth->hasIdentity()) {
-    $identity = $auth->getIdentity();
+$session = new \Zend\Session\Container('base');
+if ($session->offsetExists('user')) {
+    $identity = $session->offsetGet('user');
     $user_id = $identity['id'];
 }
-$db = Core_Db_Table::getDefaultAdapter();
+
 $row = $db->fetchRow("SELECT * FROM user_exam WHERE user_id=" . $user_id . " ORDER BY exam_date DESC LIMIT 1");
 $nganhNghes = $this->nganhNghes;
 ?>
@@ -14,7 +14,7 @@ $nganhNghes = $this->nganhNghes;
             <div style="margin-top: 20px;" class="span3">
                 <?php 
                 if (is_array($row) && count($row) > 0) { ?>
-                    <a class="download-result" href="<?php echo $this->baseUrl('/thi/viewresult'); ?>">
+                    <a class="download-result" href="<?php echo $this->basePath('/thi/viewresult'); ?>">
                         <button style="border-radius: 5px;background-color: brown;color: white;">
                             Xem kết quả lần thi gần nhất
                         </button>

@@ -1,12 +1,12 @@
 <?php
+namespace Admin\Controller;
 
-class Admin_QuestionController extends Core_Controller_Action 
+use Zend\Mvc\Controller\AbstractActionController;
+use Zend\View\Model\ViewModel;
+use Zend\Session\Container;
+class QuestionController extends AbstractActionController 
 {
 
-    public function init() 
-    {
-        parent::init();
-    }
 
 
 
@@ -46,7 +46,7 @@ class Admin_QuestionController extends Core_Controller_Action
 
 
                     Core::message()->addSuccess('Thêm mới thành công');
-                    $this->_helper->redirector('index', 'question', 'admin',array('page'=> $this->_getParam('page')));
+                    $this->_helper->redirector('index', 'question', 'admin',array('page'=> $this->params()->fromQuery('page')));
                 } else {
                     $this->view->message = 'Lỗi. Xử lý thất bại.';
                     $form->populate($formData);
@@ -57,14 +57,14 @@ class Admin_QuestionController extends Core_Controller_Action
         }
 
         $this->view->form = $form;
-        $this->view->page= $this->_getParam('page');
+        $this->view->page= $this->params()->fromQuery('page');
         $this->view->nganhnghe_ids=$nganhnghe_ids;
         $this->render('add-question');
     }
 
     public function addanswerAction() 
     {
-        $question_id = $this->_getParam("question_id", "");
+        $question_id = $this->params()->fromQuery("question_id", "");
 
         $form = new Admin_Form_Answer();
         $form->getElement('question_id')->setValue($question_id);
@@ -78,7 +78,7 @@ class Admin_QuestionController extends Core_Controller_Action
 
                 if ($mapper->createRow($formData)->save()) {
                     Core::message()->addSuccess('Thêm mới thành công');
-                    $this->_helper->redirector('index', 'question', 'admin',array('page'=> $this->_getParam('page')));
+                    $this->_helper->redirector('index', 'question', 'admin',array('page'=> $this->params()->fromQuery('page')));
                 } else {
                     $this->view->message = 'Lỗi. Xử lý thất bại.';
                     $form->populate($formData);
@@ -88,14 +88,14 @@ class Admin_QuestionController extends Core_Controller_Action
             }
         }
         $this->view->form = $form;
-        $this->view->page= $this->_getParam('page');
+        $this->view->page= $this->params()->fromQuery('page');
         $this->render('add-answer');
     }
 
     public function editAction() 
     {
 
-        $id = $this->_getParam('id');
+        $id = $this->params()->fromQuery('id');
         $where = "id=$id";
         $mapper = new \Application\Model\Question();
         $row = $mapper->fetchRow($where)->toArray();
@@ -145,7 +145,7 @@ class Admin_QuestionController extends Core_Controller_Action
                 }
 
                 Core::message()->addSuccess('Sửa thành công');
-                $this->_helper->redirector('index', 'question', 'admin',array('page'=> $this->_getParam('page')));
+                $this->_helper->redirector('index', 'question', 'admin',array('page'=> $this->params()->fromQuery('page')));
             } else {
                 $form->populate($formData);
                 if ($dap_an != NULL) {
@@ -164,14 +164,14 @@ class Admin_QuestionController extends Core_Controller_Action
         }
         $this->view->form = $form;
         $this->view->nganhnghe_ids=$nganhnghe_ids;
-        $this->view->page = $this->_getParam('page');
+        $this->view->page = $this->params()->fromQuery('page');
         $this->render('add-question');
     }
 
     public function editanswerAction() 
     {
 
-        $id = $this->_getParam('id');
+        $id = $this->params()->fromQuery('id');
         $where = "id=$id";
         $mapper = new \Application\Model\Answer();
         $row = $mapper->fetchRow($where)->toArray();
@@ -187,7 +187,7 @@ class Admin_QuestionController extends Core_Controller_Action
                 $formData['sign'] = strtoupper($formData['sign']);
                 $mapper->update($formData, 'id=' . $formData['id']);
                 Core::message()->addSuccess('Sửa thành công');
-                $this->_helper->redirector('index', 'question', 'admin',array('page'=> $this->_getParam('page')));
+                $this->_helper->redirector('index', 'question', 'admin',array('page'=> $this->params()->fromQuery('page')));
             } else {
                 $form->populate($formData);
             }
@@ -195,7 +195,7 @@ class Admin_QuestionController extends Core_Controller_Action
             $form->setDefaults($row);
         }
         $this->view->form = $form;
-        $this->view->page = $this->_getParam('page');
+        $this->view->page = $this->params()->fromQuery('page');
         $this->render('add-answer');
     }
 

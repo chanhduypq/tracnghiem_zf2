@@ -18,12 +18,12 @@ if (isset($this->message)&&trim($this->message)!='') {
 <div class="row-fluid">
     <div class="span5"></div>
     <div class="span7">
-        <form name="form" enctype="multipart/form-data" id="form" action="<?php echo $this->baseUrl('/admin/guide/save'); ?>" method="post">
+        <form name="form" enctype="multipart/form-data" id="form" action="<?php echo $this->basePath('/admin/guide/save'); ?>" method="post">
             <div class="row-fluid">
                 <div class="span12">
                     <?php
                     if ($item != "") {
-                        echo '<a href="' . $this->baseUrl() . '/admin/guide/download">download file hướng dẫn sử dụng hiện tại</a>';
+                        echo '<a href="' . $this->basePath() . '/admin/guide/download">download file hướng dẫn sử dụng hiện tại</a>';
                     }
                     ?>
                 </div>

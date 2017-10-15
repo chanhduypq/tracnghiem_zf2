@@ -16,11 +16,11 @@ if (isset($this->message)&&trim($this->message)!='') {
 </div>
 <form name="form" enctype="multipart/form-data" id="form" action="<?php echo $this->url(); ?>" method="post">
     <fieldset style="padding: 20px;">
-        <?php echo $this->render('headerfooter/partial/header.phtml');?>
+        <?php echo $this->partial('admin/headerfooter/partial/header.phtml');?>
     </fieldset>
 
     <fieldset style="padding: 20px;">
-        <?php echo $this->render('headerfooter/partial/footer.phtml');?> 
+        <?php echo $this->partial('admin/headerfooter/partial/footer.phtml');?> 
     </fieldset>
     
 </form>

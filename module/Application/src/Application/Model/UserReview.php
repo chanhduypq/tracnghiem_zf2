@@ -13,28 +13,38 @@ class Userreview extends AbstractTableGateway {
         }
     }
 
-    public static function getHtmlForReviewResult($user_review_id, &$title_header) {
-        $db = Core_Db_Table::getDefaultAdapter();
-        $row = $db->fetchAll("select sh,sm,eh,em,es,user_review_detail.question_id,"
-                . "user_review.nganh_nghe_id,"
-                . "user_review.level,"
-                . "DATE_FORMAT(user_review.review_date,'%d/%m/%Y') AS date,"
-                . "DATE_FORMAT(user_review.review_date,'%Y') AS year,"
-                . "user.danh_xung,"
-                . "user.full_name,"
-                . "user_review_detail.is_correct,"
-                . "user_review_detail.dapan_sign,"
-                . "user_review_detail.answer_sign,"
-                . "user_review_detail.answer_id,"
-                . "user_review_detail.answers_json,"
-                . "question.content AS question_content,"
-                . "nganh_nghe.title "
-                . "from user_review "
-                . "JOIN user_review_detail ON user_review.id=user_review_detail.user_review_id "
-                . "JOIN user ON user.id=user_review.user_id "
-                . "JOIN nganh_nghe ON nganh_nghe.id=user_review.nganh_nghe_id "
-                . "JOIN question ON question.id=user_review_detail.question_id "
-                . "WHERE user_review.id=$user_review_id ORDER BY user_review_detail.id ASC");
+    public static function getHtmlForReviewResult($user_review_id, &$title_header) {        
+        $select = new \Zend\Db\Sql\Select();
+        $select->columns(array(
+                    "sh" => "sh",
+                    "sm" => "sm",
+                    "eh" => "eh",
+                    "em" => "em",
+                    "es" => "es",
+                    "question_id" => "user_review_detail.question_id",           
+                    "nganh_nghe_id" => "user_review.nganh_nghe_id",
+                    "level" => "user_review.level",
+                    "date" => "DATE_FORMAT(user_review.review_date,'%d/%m/%Y')",
+                    "year" => "DATE_FORMAT(user_review.review_date,'%Y')",
+                    "danh_xung" => "user.danh_xung",
+                    "full_name" => "user.full_name",
+                    "is_correct" => "user_review_detail.is_correct",
+                    "dapan_sign" => "user_review_detail.dapan_sign",
+                    "answer_sign" => "user_review_detail.answer_sign",
+                    "answer_id" => "user_review_detail.answer_id",
+                    "answers_json" => "user_review_detail.answers_json",
+                    "question_content" => "question.content",
+                    "title" => "nganh_nghe.title"
+                ))
+                ->from("user_review")
+                ->join("user_review_detail", "user_review.id=user_review_detail.user_review_id")
+                ->join("user", "user.id=user_review.user_id")
+                ->join("nganh_nghe", "nganh_nghe.id=user_review.nganh_nghe_id")
+                ->join("question", "question.id=user_review_detail.question_id")
+                ->where("user_review.id=$user_review_id")
+                ->order("user_review_detail.id ASC")
+                ;
+        $row = $this->selectWith($select)->toArray();
         $count_correct = 0;
         $count_incorrect = 0;
         $questionIds = array();

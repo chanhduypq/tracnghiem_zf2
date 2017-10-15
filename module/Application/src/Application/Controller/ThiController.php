@@ -1,56 +1,66 @@
 <?php
+namespace Application\Controller;
 
-class ThiController extends Core_Controller_Action 
+use Zend\Mvc\Controller\AbstractActionController;
+use Zend\View\Model\ViewModel;
+use Zend\Session\Container;
+class ThiController extends AbstractActionController 
 {
 
-    public function init() 
-    {
-        parent::init();
-        $this->view->headTitle('Thi trắc nghiệm', true);
-    }
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+//    public function init() {
+//        parent::init();
+//        $this->view->headTitle('Thi trắc nghiệm', true);
+//    }
+    
+    public $param = array();
 
-    public function viewresultAction() 
+    public function viewresult() 
     {
-        $db = Core_Db_Table::getDefaultAdapter();
-        $row = $db->fetchRow("SELECT * FROM user_exam WHERE user_id=" . $this->getUserId() . " ORDER BY exam_date DESC LIMIT 1");
+
+        $model = new \Application\Model\Table('');
+        $select = new \Zend\Db\Sql\Select();
+        $select->from('user_exam')->where("user_id=".$this->getUserId())->order("exam_date DESC");
+        $row = $model->selectWith($select)->toArray();
         if (!is_array($row) || count($row) == 0) {
-            $this->_helper->redirector('index', 'thi', 'default');
-            return;
+            return $this->redirect()->toUrl('/application/thi');   
         }
-        $html = \Application\Model\Userexam::getHtmlForExamResult($row['id'], $title_header);
+        $html = UserExam::getHtmlForExamResult($row['id'], $title_header);
 
-        $date = explode(' ', $row['exam_date']);
+        $date = explode(' ', $row[0]['exam_date']);
         $date = explode('-', $date[0]);
-        Core_Common_Pdf::createFilePdf(Core_Common_Pdf::DOWNLOAD, $html, $date[0] . '_' . $date[1] . '_' . $date[2] . '.pdf', $title_header);
+        Pdf::createFilePdf(Pdf::DOWNLOAD, $html, $date[0] . '_' . $date[1] . '_' . $date[2] . '.pdf', $title_header);
     }
 
-    public function indexAction() 
+    public function index() 
     {
 
-        $this->view->i = intval(date('i'));
-        $this->view->h = intval(date('H'));
-        $data = $this->_request->getPost();
-        $this->setParams($data, $nganhNgheId, $level, $questionIds, $questions, $nganhNghes, $showFormNganhNgheCapBac);
-        $this->setupExamingSession($data, $nganhNgheId, $level, $questionIds);
+        $this->param['i']=intval(date('i'));
+        $this->param['h']=intval(date('H'));
+        
+        $request= $this->params()->fromPost();
+        $this->setParams($request);
+        $this->setupExamingSession($request, $this->param['nganhNgheId'] ,$this->param['level'] ,$this->param['questionIds'] );
         if ($this->isReExam()) {
-            $this->processReExam($data);
+            $this->processReExam($request);
         } else {
-            $this->processExam($data);
+            $this->processExam($request);
         }
 
-        $this->view->success = $this->getMessage();
-        $this->view->nganhNgheId = $nganhNgheId;
-        $this->view->level = $level;
-        $this->view->questions = $questions;
-        $this->view->nganhNghes = $nganhNghes;
-        $this->view->showFormNganhNgheCapBac=$showFormNganhNgheCapBac;
+        $this->param['success'] = $this->getMessage();
+
+        return new ViewModel($this->param); 
     }
     
-    private function saveDB($data) 
+    private function saveDB($request) 
     {
         $date = date('Y-m-d');
-        $h = $data['h'];
-        $m = $data['i'];
+        $h = $request->get('h');
+        $m = $request->get('i');
         if($m==0){
             $m=59;
             $h--;
@@ -58,24 +68,29 @@ class ThiController extends Core_Controller_Action
         else{
             $m--;
         }
-        $db = Core_Db_Table::getDefaultAdapter();
-        $row = $db->fetchRow("select * from user_exam where DATE(exam_date)='" . $date . "' AND user_id=" . $this->getUserId());
+        
+        $model = new \Application\Model\Table('');
+        $select = new \Zend\Db\Sql\Select();
+        $select->from('user_exam')->where("DATE(exam_date)='" . $date . "' AND user_id=" . $this->getUserId());
+        $row = $model->selectWith($select)->toArray();
         if (is_array($row) && count($row) > 0) {
             return;
         }
 
-        $db->beginTransaction();
+//        DB::beginTransaction();
         try {
-            $auth = Zend_Auth::getInstance();
-            $identity = $auth->getIdentity();
+            
+            $session = new Container('base');
+            $identity = $session->offsetGet('user');
             $sh = $identity['sh'];
             $sm = $identity['sm'];
+            
             $modelUserExam = new \Application\Model\Userexam();
             $userExamId = $modelUserExam->insert(
                     array(
                         'user_id' => $this->getUserId(),
-                        'nganh_nghe_id' => $data['nganh_nghe_id_form2'],
-                        'level' => $data['level_form2'],
+                        'nganh_nghe_id' => $request['nganh_nghe_id_form2'],
+                        'level' => $request['level_form2'],
                         'exam_date' => date("Y-m-d $h:$m:s"),
                         'sh' => $sh,
                         'sm' => $sm,
@@ -85,13 +100,13 @@ class ThiController extends Core_Controller_Action
                     )
             );
             $i = 0;
-            $questionIds = $data['question_id'];
-            $answerIds = $data['answer_id'];
-            $answerSigns = $data['answer_sign'];
-            $dapanSigns = $data['dapan_sign'];
-            $answersJsons = $data['answers_json'];
+            $questionIds = $request['question_id'];
+            $answerIds = $request['answer_id'];
+            $answerSigns = $request['answer_sign'];
+            $dapanSigns = $request['dapan_sign'];
+            $answersJsons = $request['answers_json'];
             $count_correct = 0;
-            $user_exam_detail = new \Application\Model\Userexamdetail();
+            
             for ($i = 0, $n = count($questionIds); $i < $n; $i++) {
                 if ($answerSigns[$i] == $dapanSigns[$i]) {
                     $is_correct = 1;
@@ -100,7 +115,7 @@ class ThiController extends Core_Controller_Action
                     $is_correct = 0;
                 }
 
-                $user_exam_detail->insert(array(
+                DB::table('user_exam_detail')->insert(array(
                     'user_exam_id' => $userExamId,
                     'question_id' => $questionIds[$i],
                     'answer_id' => ($answerIds[$i] == '' ? '-1' : $answerIds[$i]),
@@ -111,44 +126,55 @@ class ThiController extends Core_Controller_Action
                 ));
             }
 
-            $config_exam = $db->fetchRow("SELECT * FROM config_exam");
+            $model = new \Application\Model\Table('');
+            $select = new \Zend\Db\Sql\Select();
+            $select->from('config_exam');
+            $config_exam = $model->selectWith($select)->toArray();
+            $config_exam=$config_exam[0];
+            
 
             if ($count_correct >= $config_exam['phan_tram'] * count($questionIds)) {
-                $user_pass = new \Application\Model\Userpass();
-                $user_pass->insert(array(
+                DB::table('user_pass')->insert(array(
                     'user_id' => $this->getUserId(),
-                    'nganh_nghe_id' => $data['nganh_nghe_id_form2'],
-                    'level' => $data['level_form2'],
+                    'nganh_nghe_id' => $request['nganh_nghe_id_form2'],
+                    'level' => $request['level_form2'],
                     'user_exam_id' => $userExamId,
                 ));
             }
-            $db->commit();
+//            DB::commit();
         } catch (Exception $e) {
-            $db->rollBack();
+//            DB::rollback();
         }
     }
 
-    private function saveDBAgain($data) 
+    private function saveDBAgain($request) 
     {
-        $db = Core_Db_Table::getDefaultAdapter();
-        $db->beginTransaction();
+        
+//        DB::beginTransaction();
 
         try {
-            $user_exam = $db->fetchRow("select * from user_exam where user_id=" . $this->getUserId() . ' ORDER BY exam_date DESC LIMIT 1');
+            
+            
+            $model = new \Application\Model\Table('');
+            $select = new \Zend\Db\Sql\Select();
+            $select->from('user_exam')->where("user_id=".$this->getUserId())->order('exam_date DESC');
+            $user_exam = $model->selectWith($select)->toArray();
+            $user_exam=$user_exam[0];
             if (is_array($user_exam) && count($user_exam) > 0) {
                 $userExamId = $user_exam['id'];
             } else {
                 $userExamId = -1;
             }
             $i = 0;
-            $questionIds = $data['question_id'];
-            $answerIds = $data['answer_id'];
-            $answerSigns = $data['answer_sign'];
-            $dapanSigns = $data['dapan_sign'];
-            $answersJsons = $data['answers_json'];
+            
+            $questionIds = $request['question_id'];
+            $answerIds = $request['answer_id'];
+            $answerSigns = $request['answer_sign'];
+            $dapanSigns = $request['dapan_sign'];
+            $answersJsons = $request['answers_json'];
             $count_correct = 0;
-            $user_exam_detail = new \Application\Model\Userexamdetail();
-            $user_exam_detail->delete('user_exam_id=' . $userExamId);
+            
+            DB::table('user_exam_detail')->where('user_exam_id=' . $userExamId)->delete();
             for ($i = 0, $n = count($questionIds); $i < $n; $i++) {
                 if ($answerSigns[$i] == $dapanSigns[$i]) {
                     $is_correct = 1;
@@ -157,7 +183,7 @@ class ThiController extends Core_Controller_Action
                     $is_correct = 0;
                 }
 
-                $user_exam_detail->insert(array(
+                DB::table('user_exam_detail')->insert(array(
                     'user_exam_id' => $userExamId,
                     'question_id' => $questionIds[$i],
                     'answer_id' => ($answerIds[$i] == '' ? '-1' : $answerIds[$i]),
@@ -168,45 +194,51 @@ class ThiController extends Core_Controller_Action
                 ));
             }
 
-            $modelUserExam = new \Application\Model\Userexam();
+            
 
-            $config_exam = $db->fetchRow("SELECT * FROM config_exam");
+            
+            $model = new \Application\Model\Table('');
+            $select = new \Zend\Db\Sql\Select();
+            $select->from('config_exam');
+            $config_exam = $model->selectWith($select)->toArray();
+            $config_exam=$config_exam[0];
 
             if ($count_correct >= $config_exam['phan_tram'] * count($questionIds)) {
-                $user_pass = new \Application\Model\Userpass();
-                $user_pass->insert(array(
+                DB::table('user_pass')->insert(array(
                     'user_id' => $this->getUserId(),
-                    'nganh_nghe_id' => $data['nganh_nghe_id_form2'],
-                    'level' => $data['level_form2'],
+                    'nganh_nghe_id' => $request['nganh_nghe_id_form2'],
+                    'level' => $request['level_form2'],
                     'user_exam_id' => $userExamId,
                 ));
                 $allow_re_exam = 0;
             } else {
                 $allow_re_exam = 1;
             }
-            $modelUserExam->update(array('allow_re_exam' => $allow_re_exam, 'nganh_nghe_id' => $data['nganh_nghe_id_form2'], 'level' => $data['level_form2']), 'id=' . $userExamId);
-            $db->commit();
+            DB::table('user_exam')->where('id=' . $userExamId)->update(array('allow_re_exam' => $allow_re_exam, 'nganh_nghe_id' => $request->get('nganh_nghe_id_form2'), 'level' => $request->get('level_form2')));
+//            DB::commit();
         } catch (Exception $e) {
-            $db->rollBack();
+//            DB::rollback();
         }
     }
 
     
-    private function submitReExam($data) 
+    private function submitReExam($request) 
     {
-        $this->saveDBAgain($data);
+        $this->saveDBAgain($request);
         $this->resetSession();
-        Core::message()->addSuccess('Chúc mừng bạn đã hoàn thành kỳ thi lần này.');
-        $this->_helper->redirector('index', 'thi', 'default');
+        $session = new Container('base');
+        $session->offsetSet('success', 'Chúc mừng bạn đã hoàn thành kỳ thi lần này.');
+        return $this->redirect()->toUrl('/application/thi'); 
         exit;
     }
 
-    private function submitExam($data) 
+    private function submitExam($request) 
     {
-        $this->saveDB($data);
+        $this->saveDB($request);
         $this->resetSession();
-        Core::message()->addSuccess('Chúc mừng bạn đã hoàn thành kỳ thi lần này.');
-        $this->_helper->redirector('index', 'thi', 'default');
+        $session = new Container('base');
+        $session->offsetSet('success', 'Chúc mừng bạn đã hoàn thành kỳ thi lần này.');        
+        return $this->redirect()->toUrl('/application/thi');   
         exit;
     }
 
@@ -233,9 +265,14 @@ class ThiController extends Core_Controller_Action
      */
     private function isReExam() 
     {
-        $db = Core_Db_Table::getDefaultAdapter();
-        $user_exam = $db->fetchRow("select * from user_exam where user_id=" . $this->getUserId() . ' ORDER BY exam_date DESC LIMIT 1');
-        if (is_array($user_exam) && count($user_exam) > 0 && $user_exam['allow_re_exam'] == '1') {
+        
+        
+        
+        $model = new \Application\Model\Table('');
+        $select = new \Zend\Db\Sql\Select();
+        $select->from('user_exam')->where("user_id=".$this->getUserId())->order('exam_date DESC');
+        $user_exam = $model->selectWith($select)->toArray();
+        if (is_array($user_exam) && count($user_exam) > 0 && $user_exam[0]['allow_re_exam'] == '1') {
             return TRUE;
         }
         return FALSE;
@@ -251,65 +288,99 @@ class ThiController extends Core_Controller_Action
      * @param array $nganhNghes
      * @param bool $showFormNganhNgheCapBac
      */
-    private function setParams($data, &$nganhNgheId, &$level, &$questionIds, &$questions, &$nganhNghes, &$showFormNganhNgheCapBac) 
+    private function setParams($request) 
     {
-        $auth = Zend_Auth::getInstance();
-        $identity = $auth->getIdentity();
-        $db = Core_Db_Table::getDefaultAdapter();
+         
+        $session = new Container('base');
+        $identity = $session->offsetGet('user');
+        
         if (isset($identity['examing']) && $identity['examing'] == true) {
             $nganhNgheId = $identity['nganh_nghe_id'];
             $level = $identity['level'];
             $questionIds = $identity['questionIds'];
         } else {
-            $nganhNgheId = (count($data) > 0 && isset($data['nganh_nghe_id'])) ? $data['nganh_nghe_id'] : 0;
-            $level = (count($data) > 0 && isset($data['level'])) ? $data['level'] : 0;            
-            $config_exam = $db->fetchRow("SELECT * FROM config_exam");
-            $questionIds = \Application\Model\Question::getQuestionIdsByLevelAndNganhNgheId($nganhNgheId, $level, $config_exam['number']);
+            $nganhNgheId = $request['nganh_nghe_id'] ? $request['nganh_nghe_id'] : 0;
+            $level = $request['level'] ? $request['level'] : 0;            
+            
+            $model = new \Application\Model\Table('');
+            $select = new \Zend\Db\Sql\Select();
+            $select->from('config_exam');
+            $config_exam = $model->selectWith($select)->toArray();
+            $config_exam=$config_exam[0];
+            $questionIds = Question::getQuestionIdsByLevelAndNganhNgheId($nganhNgheId, $level, $config_exam['number']);
         }
         
         $date = date('Y-m-d');
-        $h = $this->_getParam('h', date('H'));
-        $m = $this->_getParam('i', date('i'));
-        $exam_time = $db->fetchRow("select DATE(`date`) AS date,sh,sm,eh,em from exam_time where DATE(`date`)='$date' AND ($h>sh OR ($h=sh AND $m>=sm)) AND ($h < eh OR ($h=eh AND $m<=em))");
+
+        $h = $request['h'] ? $request['h'] : date('H');
+        $m = $request['i'] ? $request['i'] : date('i');
+        
+        $model = new \Application\Model\Table('');
+        $select = new \Zend\Db\Sql\Select();
+        $select->columns(array(
+            "date"=>new \Zend\Db\Sql\Expression('DATE(`date`)'),
+            "sh"=>"sh",
+            "sm"=>"sm",
+            "eh"=>"eh",
+            "em"=>"em"
+        ))->from('exam_time')->where("DATE(`date`)='$date' AND ($h>sh OR ($h=sh AND $m>=sm)) AND ($h < eh OR ($h=eh AND $m<=em))");
+        $exam_time = $model->selectWith($select)->toArray();
         if (is_array($exam_time) && count($exam_time) > 0) {
-            $user_exam = $db->fetchRow("select * from user_exam where DATE(exam_date)='" . $exam_time['date'] . "' AND user_id=" . $this->getUserId());
+            $model = new \Application\Model\Table('');
+            $select = new \Zend\Db\Sql\Select();
+            $select->from('user_exam')->where("DATE(exam_date)='" . $exam_time[0]['date'] . "' AND user_id=" . $this->getUserId());
+            $user_exam = $model->selectWith($select)->toArray();
+            
         } else {
             $user_exam = array();
         }
 
         if (
-                (count($data) == 0 && !isset($identity['examing'])) 
+                ($request['_token'] == false && !isset($identity['examing'])) 
                 || (!is_array($exam_time) || count($exam_time) == 0)//nằm ngoài thời gian thi
-                || (is_array($user_exam) && count($user_exam) > 0 && $user_exam['allow_re_exam'] != '1')//đã thi rồi
+                || (is_array($user_exam) && count($user_exam) > 0 && $user_exam[0]['allow_re_exam'] != '1')//đã thi rồi
         ) {
             $questions = array();
         } else {
-            $questions = \Application\Model\Question::getQuestionsByQuestionIds($questionIds);
+            $questions = Question::getQuestionsByQuestionIds($questionIds);
         }
 
         if (
-                (count($data) > 0 && isset($data['question_id']))//nhấn nút hoàn tất
+                $request['question_id']//nhấn nút hoàn tất
                 || (!is_array($exam_time) || count($exam_time) == 0)//nằm ngoài thời gian thi
-                || (is_array($user_exam) && count($user_exam) > 0 && $user_exam['allow_re_exam'] != '1')//đã thi rồi
+                || (is_array($user_exam) && count($user_exam) > 0 && $user_exam[0]['allow_re_exam'] != '1')//đã thi rồi
         ) {
             $nganhNghes = array();
         } else {
-            $nganhNghes = $db->fetchAll('SELECT * FROM nganh_nghe');
+            
+            $model = new \Application\Model\Table('');
+            $select = new \Zend\Db\Sql\Select();
+            $select->from('nganh_nghe');
+            $nganhNghes = $model->selectWith($select)->toArray();
         }
 
         if (
-                count($data) > 0 
+                $request['_token']
                 || (!is_array($exam_time) || count($exam_time) == 0)//nằm ngoài thời gian thi
-                || (is_array($user_exam) && count($user_exam) > 0 && $user_exam['allow_re_exam'] != '1')//đã thi rồi
+                || (is_array($user_exam) && count($user_exam) > 0 && $user_exam[0]['allow_re_exam'] != '1')//đã thi rồi
         ) {
             $showFormNganhNgheCapBac = FALSE;
         } else {
             if (isset($identity['examing']) && $identity['examing'] == true) {
+                
                 $showFormNganhNgheCapBac = FALSE;
             } else {
+                
                 $showFormNganhNgheCapBac = true;
             }
         }
+        
+        $this->param['questions'] = $questions;
+        $this->param['showFormNganhNgheCapBac'] = $showFormNganhNgheCapBac;
+        $this->param['nganhNgheId'] = $nganhNgheId;
+        $this->param['level'] = $level;
+        $this->param['questionIds'] = $questionIds;
+        $this->param['nganhNghes'] = $nganhNghes;
     }
 
     /**
@@ -319,62 +390,77 @@ class ThiController extends Core_Controller_Action
      * @param int|string $level
      * @param array $questionIds
      */
-    private function setupExamingSession($data, $nganhNgheId, $level, $questionIds) 
+    private function setupExamingSession($request, $nganhNgheId, $level, $questionIds) 
     {
-        if (count($data) > 0) {
-            $auth = Zend_Auth::getInstance();
-            $identity = $auth->getIdentity();
-            if (!isset($identity['examing']) || $identity['examing'] == FALSE) {
-                $auth->clearIdentity();
+        if ($request['_token']) {
+            $session = new Container('base');
+            $identity = $session->offsetGet('user');
+            if (!isset($identity['examing']) || $identity['examing'] == FALSE) {                
                 $this->turnOnExamingSession($nganhNgheId, $level, $questionIds, $identity);
-                $auth->getStorage()->write($identity);
+                $session->offsetSet('user',$identity);    
             }
         }
     }
 
-    private function processReExam($data) 
+    private function processReExam($request) 
     {
-        if (count($data) > 0) {
-            if (isset($data['question_id'])) {
-                $this->submitReExam($data);
-                exit;
-            }
+        if ($request['_token'] && $request['question_id']) {
+            $this->submitReExam($request);
+            exit;
         }
-        $this->view->miniutes = 0;
+
+        $this->param['miniutes']=0;
     }
 
-    private function processExam($data) 
+    private function processExam($request) 
     {
-        $db = Core_Db_Table::getDefaultAdapter();
+        
         $date = date('Y-m-d');
-        $h = $this->_getParam('h', date('H'));
-        $m = $this->_getParam('i', date('i'));
-        $row = $db->fetchRow("select DATE(`date`) AS date,sh,sm,eh,em from exam_time where DATE(`date`)='$date' AND ($h>sh OR ($h=sh AND $m>=sm)) AND ($h < eh OR ($h=eh AND $m<=em))");
+        $h = $request['h'] ? $request['h'] : date('H');
+        $m = $request['i'] ? $request['i'] : date('i');
+        
+        $model = new \Application\Model\Table('');
+        $select = new \Zend\Db\Sql\Select();
+        $select->columns(array(
+            "date"=>new \Zend\Db\Sql\Expression('DATE(`date`)'),
+            "sh"=>"sh",
+            "sm"=>"sm",
+            "eh"=>"eh",
+            "em"=>"em"
+        ))->from('exam_time')->where("DATE(`date`)='$date' AND ($h>sh OR ($h=sh AND $m>=sm)) AND ($h < eh OR ($h=eh AND $m<=em))");
+        $row = $model->selectWith($select)->toArray();
         if (is_array($row) && count($row) > 0) {
+            $row=$row[0];
             $start = new \DateTime($row['date'] . ' ' . $row['sh'] . ':' . $row['sm'] . ':00');
             $current = new \DateTime(date('Y-m-d H:i:00'));
             $diff = $current->diff($start);
-            $this->view->eh = $row['eh'];
-            $this->view->em = $row['em'];
+            $this->param['eh']=$row['eh'];
+            $this->param['em']=$row['em'];
         }
-        if ((!is_array($row) || count($row) == 0) && (count($data) == 0 || (count($data) > 0 && !isset($data['question_id'])))) {
-            $this->view->miniutes = 0;
-            $this->view->message = 'Thời điểm này không nằm trong thời gian thi hoặc bạn đã hết giờ thi.';
+        if ((!is_array($row) || count($row) == 0) && ($request['_token'] == '' || ($request['_token']&& $request['question_id']==''))) {
+            $miniutes = 0;
+            $message = 'Thời điểm này không nằm trong thời gian thi hoặc bạn đã hết giờ thi.';
         } else {
-            $row = $db->fetchRow("select * from user_exam where DATE(exam_date)='" . $row['date'] . "' AND user_id=" . $this->getUserId());
+            
+            $model = new \Application\Model\Table('');
+            $select = new \Zend\Db\Sql\Select();
+            $select->from('user_exam')->where("DATE(exam_date)='" . $row['date'] . "' AND user_id=" . $this->getUserId());
+            $row = $model->selectWith($select)->toArray();
             if (is_array($row) && count($row) > 0) {
-                $this->view->miniutes = 0;
-                $this->view->message = '';
+                $miniutes = 0;
+                $message = '';
             } else {
-                if (count($data) > 0) {
-                    if (isset($data['question_id'])) {
-                        $this->submitExam($data);
-                        exit;
-                    }
+                if ($request['_token'] && $request['question_id']) {
+                    $this->submitExam($request);
+                    exit;
                 }
-                $this->view->miniutes = $diff->h * 60 + $diff->i;
+                $miniutes = $diff->h * 60 + $diff->i;
             }
         }
+
+        
+        $this->param['miniutes']=$miniutes;
+        $this->param['message']=$message;
     }
 
 }

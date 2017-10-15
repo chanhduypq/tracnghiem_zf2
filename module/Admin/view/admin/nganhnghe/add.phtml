@@ -17,7 +17,7 @@ if (isset($this->message)&&trim($this->message)!='') {
 ?>
 <div class="row-fluid" style="margin-top: 10px;">
     <?php     
-    $buttons[]=array('onclick'=>"window.location = '".$this->baseUrl('/admin/nganhnghe/')."'",'label'=>'Quay lại');
+    $buttons[]=array('onclick'=>"window.location = '".$this->basePath('/admin/nganhnghe/')."'",'label'=>'Quay lại');
     $buttons[]=array('onclick'=>'document.form.submit();','label'=>'Lưu');
     echo $this->toolbar($buttons);
     ?>

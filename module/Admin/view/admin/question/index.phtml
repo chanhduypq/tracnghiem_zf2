@@ -3,9 +3,9 @@ $items = $this->items;
 
 
 
-$auth = Zend_Auth::getInstance();
-if ($auth->hasIdentity()) {
-    $identity = $auth->getIdentity();
+$session = new \Zend\Session\Container('base');
+if ($session->offsetExists('user')) {
+    $identity = $session->offsetGet('user');
 }
 
 
@@ -51,7 +51,7 @@ if (isset($this->message)&&trim($this->message)!='') {
 
     <div class="span12">
         <?php     
-        $buttons[]=array('onclick'=>"window.location = '".$this->baseUrl('/admin/question/add/page/'.$this->page)."'",'label'=>'Thêm câu hỏi');
+        $buttons[]=array('onclick'=>"window.location = '".$this->basePath('/admin/question/add/page/'.$this->page)."'",'label'=>'Thêm câu hỏi');
         echo $this->toolbar($buttons);
         ?>
     </div>
@@ -74,25 +74,25 @@ if (isset($this->message)&&trim($this->message)!='') {
 
         <div style="background-color: <?php echo $background;?>" class="row-fluid" id="<?php echo $item['id']; ?>">
             <div class="span1" title="Thêm mới câu trả lời">
-                <a href="<?php echo $this->baseUrl('/admin/question/addanswer/question_id/') . $item['id'].'/page/'.$this->page; ?>">
-                    <img style="width: 43px;height: 41px;" src="<?php echo $this->baseUrl("/images/icon/add.gif"); ?>"/>
+                <a href="<?php echo $this->basePath('/admin/question/addanswer/question_id/') . $item['id'].'/page/'.$this->page; ?>">
+                    <img style="width: 43px;height: 41px;" src="<?php echo $this->basePath("/images/icon/add.gif"); ?>"/>
                 </a>
             </div>
             <div class="span8">
                 <?php echo $item_des; ?>
             </div>
             <div class="span2">
-                <a class="remove" title="Click vào đây để xóa" href="<?php echo $this->baseUrl('/admin/question/delete/question_id/') . $item['id']; ?>">
-                    <img class="delete question" src="<?php echo $this->baseUrl("/images/icon/delete-icon.png"); ?>"/>                                                   
+                <a class="remove" title="Click vào đây để xóa" href="<?php echo $this->basePath('/admin/question/delete/question_id/') . $item['id']; ?>">
+                    <img class="delete question" src="<?php echo $this->basePath("/images/icon/delete-icon.png"); ?>"/>                                                   
                 </a>
 
-                <a href="<?php echo $this->baseUrl('/admin/question/edit/id/') . $item['id'].'/page/'.$this->page; ?>">
-                    <img class="edit question" title="Click vào đây để sửa" style="cursor: pointer;" src="<?php echo $this->baseUrl("/images/icon/ico_edit.png"); ?>" onclick="editItem(this);"/>                                                   
+                <a href="<?php echo $this->basePath('/admin/question/edit/id/') . $item['id'].'/page/'.$this->page; ?>">
+                    <img class="edit question" title="Click vào đây để sửa" style="cursor: pointer;" src="<?php echo $this->basePath("/images/icon/ico_edit.png"); ?>" onclick="editItem(this);"/>                                                   
                 </a>
             </div>
             <div class="span1" style="margin: 0 auto;text-align: center;display: table-cell;vertical-align: middle;">
                 <?php if (count($item['answers']) > 0) { ?>
-                    <img class="parent" src="<?php echo $this->baseUrl(); ?>/images/down.png" style="width: 32px;height: 32px;cursor: pointer;"/>
+                    <img class="parent" src="<?php echo $this->basePath(); ?>/images/down.png" style="width: 32px;height: 32px;cursor: pointer;"/>
                     <?php
                 }
                 ?>
@@ -117,12 +117,12 @@ if (isset($this->message)&&trim($this->message)!='') {
                         <?php echo $item_des; ?>
                     </div>
                     <div class="span2" style="border-right: solid 1px black;">
-                        <a class="remove" title="Click vào đây để xóa" href="<?php echo $this->baseUrl('/admin/question/delete/answer_id/') . $answer['id']; ?>">
-                            <img class="delete answer" src="<?php echo $this->baseUrl("/images/icon/delete-icon.png"); ?>"/>                                                   
+                        <a class="remove" title="Click vào đây để xóa" href="<?php echo $this->basePath('/admin/question/delete/answer_id/') . $answer['id']; ?>">
+                            <img class="delete answer" src="<?php echo $this->basePath("/images/icon/delete-icon.png"); ?>"/>                                                   
                         </a>
 
-                        <a href="<?php echo $this->baseUrl('/admin/question/editanswer/id/') . $answer['id'].'/page/'.$this->page; ?>">
-                            <img class="edit answer" title="Click vào đây để sửa" style="cursor: pointer;" src="<?php echo $this->baseUrl("/images/icon/ico_edit.png"); ?>" onclick="editItem(this);"/>                                                   
+                        <a href="<?php echo $this->basePath('/admin/question/editanswer/id/') . $answer['id'].'/page/'.$this->page; ?>">
+                            <img class="edit answer" title="Click vào đây để sửa" style="cursor: pointer;" src="<?php echo $this->basePath("/images/icon/ico_edit.png"); ?>" onclick="editItem(this);"/>                                                   
                         </a>
                     </div>
 

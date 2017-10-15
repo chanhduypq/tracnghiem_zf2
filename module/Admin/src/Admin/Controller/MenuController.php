@@ -1,19 +1,20 @@
 <?php
+namespace Admin\Controller;
 
-class Admin_MenuController extends Core_Controller_Action 
+use Zend\Mvc\Controller\AbstractActionController;
+use Zend\View\Model\ViewModel;
+use Zend\Session\Container;
+class MenuController extends AbstractActionController 
 {
 
-    public function init() 
-    {
-        parent::init();
-    }
+
 
     public function indexAction() 
     {
         $mapper = new \Admin\Model\MenuMapper();
         if ($this->_request->isPost()) {
-            $id_array = $this->_getParam("id");
-            $text_array = $this->_getParam("text");
+            $id_array = $this->getRequest()->getPost("id");
+            $text_array = $this->getRequest()->getPost("text");
             for ($i = 0, $n = count($id_array); $i < $n; $i++) {
                 $data = array(
                     'text' => $text_array[$i]

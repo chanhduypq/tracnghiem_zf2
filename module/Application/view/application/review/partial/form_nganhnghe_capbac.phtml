@@ -7,17 +7,22 @@ if (!is_array($questions) || count($questions) == 0) { ?>
         <div class="row-fluid">
             <div class="span12">
                 <?php
-                $auth = Zend_Auth::getInstance();
-                if ($auth->hasIdentity()) {
-                    $identity = $auth->getIdentity();
+                $session = new \Zend\Session\Container('base');
+                if ($session->offsetExists('user')) {
+                    $identity = $session->offsetGet('user');
                     $user_id = $identity['id'];
                 }
-                $db = Core_Db_Table::getDefaultAdapter();
-                $row = $db->fetchRow("SELECT * FROM user_review WHERE user_id=" . $user_id . " ORDER BY review_date DESC LIMIT 1");
+                
+                
+                $model = new \Application\Model\Table('');
+                $select = new \Zend\Db\Sql\Select();
+                $select->from('user_review')->where("user_id=" . $user_id)->order("review_date DESC")->limit(1);
+                $row = $model->selectWith($select)->toArray();
+           
                 if (is_array($row) && count($row) > 0) {
                     ?>
                     <div class="span4" style="margin-top: 20px;">
-                        <a class="download-result" href="<?php echo $this->baseUrl('/review/viewresult'); ?>">
+                        <a class="download-result" href="<?php echo $this->basePath('/review/viewresult'); ?>">
                             <button style="border-radius: 5px;background-color: brown;color: white;">
                                 Xem kết quả lần ôn tập gần nhất
                             </button>
@@ -64,7 +69,7 @@ if (!is_array($questions) || count($questions) == 0) { ?>
     <?php
 }
 ?>
-<script src="<?php echo $this->baseUrl();?>/js/jquery.fileDownload.js?<?php echo substr(md5(microtime()),rand(0,26),5);?>" type="text/javascript"></script>
+<script src="<?php echo $this->basePath();?>/js/jquery.fileDownload.js?<?php echo substr(md5(microtime()),rand(0,26),5);?>" type="text/javascript"></script>
 <script type="text/javascript">
     jQuery(function ($) {
         

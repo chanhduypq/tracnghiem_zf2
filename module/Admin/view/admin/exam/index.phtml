@@ -1,4 +1,4 @@
-<script type="text/javascript" src="<?php echo $this->baseUrl('/js/jquery.number.js'); ?>"></script>
+<script type="text/javascript" src="<?php echo $this->basePath('/js/jquery.number.js'); ?>"></script>
 <?php if (isset($this->message) && $this->message != '') { ?>
     <div style="color: red;text-align: center;width: 100%;">
         <h3><?php echo $this->message; ?></h3>
@@ -15,15 +15,15 @@
 
 <form name="form" enctype="multipart/form-data" id="form" method="post"> 
     <fieldset>
-        <?php echo $this->render('exam/partial/examtime.phtml');?>
+        <?php echo $this->partial('admin/exam/partial/examtime.phtml');?>
     </fieldset>
 
     <fieldset>
-        <?php echo $this->render('exam/partial/config.phtml');?> 
+        <?php echo $this->partial('admin/exam/partial/config.phtml');?> 
     </fieldset>
     
     <fieldset>
-        <?php echo $this->render('exam/partial/level.phtml');?> 
+        <?php echo $this->partial('admin/exam/partial/level.phtml');?> 
     </fieldset>
     
 </form>

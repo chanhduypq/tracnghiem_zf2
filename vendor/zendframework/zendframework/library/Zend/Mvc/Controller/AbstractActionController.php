@@ -114,5 +114,53 @@ abstract class AbstractActionController extends AbstractController
         $viewModel->setResult('Page not found');
         return $viewModel;
     }
+    
+    public function getUserId() {
+        $session = new \Zend\Session\Container('base');
+        if (!$session->offsetExists('user')) {
+            return -1;
+        } else {
+            $identity = $session->offsetGet('user');
+            return $identity['id'];
+        }
+    }
+    
+    /**
+     * khởi tạo lại session ban đầu
+     * có nghĩa là 
+     *     ban đầu khi login, lưu thông tin session nào thi bây giờ chỉ lấy lại những thông tin đó, 
+     *     những thông tin session mới thêm vào sau này thi hủy đi
+     */
+    public function resetSession() {
+        $session = new \Zend\Session\Container('base');
+        $identity = $session->offsetGet('user');
 
+        foreach ($identity as $key => $value) {
+            if (!in_array($key, array(
+                        'id',
+                        'danh_xung',
+                        'full_name',
+                        'email',
+                        'phone',
+                        'password',
+                        'is_admin',
+                        'user'
+                            )
+                    )
+            ) {
+                unset($identity["$key"]);
+            }
+        }
+
+        $session->offsetSet('user', $identity);
+    }
+
+    public function getMessage() {
+        $session = new \Zend\Session\Container('base');
+        if ($session->offsetExists('message')) {            
+            return $session->offsetGet('message');
+        } else {
+            return '';
+        }
+    }
 }

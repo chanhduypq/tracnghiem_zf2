@@ -1,12 +1,13 @@
 <?php
+namespace Admin\Controller;
 
-class Admin_NganhngheController extends Core_Controller_Action 
+use Zend\Mvc\Controller\AbstractActionController;
+use Zend\View\Model\ViewModel;
+use Zend\Session\Container;
+class NganhngheController extends AbstractActionController 
 {
 
-    public function init() 
-    {
-        parent::init();
-    }
+
 
     public function indexAction() 
     {
@@ -61,7 +62,7 @@ class Admin_NganhngheController extends Core_Controller_Action
     public function editAction() 
     {
 
-        $id = $this->_getParam('id');
+        $id = $this->params()->fromQuery('id');
 
         $where = "id=$id";
         $mapper = new \Application\Model\Nganhnghe();

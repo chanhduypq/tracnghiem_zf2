@@ -1,12 +1,13 @@
 <?php
+namespace Admin\Controller;
 
-class Admin_HeaderpdfController extends Core_Controller_Action 
+use Zend\Mvc\Controller\AbstractActionController;
+use Zend\View\Model\ViewModel;
+use Zend\Session\Container;
+class HeaderpdfController extends AbstractActionController 
 {
 
-    public function init() 
-    {
-        parent::init();
-    }
+
 
     public function indexAction() 
     {

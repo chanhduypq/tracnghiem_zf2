@@ -1,6 +1,10 @@
 <?php
+namespace Admin\Controller;
 
-class Admin_UserController extends Core_Controller_Action {
+use Zend\Mvc\Controller\AbstractActionController;
+use Zend\View\Model\ViewModel;
+use Zend\Session\Container;
+class UserController extends AbstractActionController {
 
     public function init() {
         parent::init();
@@ -17,16 +21,16 @@ class Admin_UserController extends Core_Controller_Action {
         if (is_array($this->formData) && count($this->formData) > 0) {
             $this->formData['password'] = sha1($this->formData['email']);
         }
-        $this->view->page = $this->_getParam('page');
+        $this->view->page = $this->params()->fromQuery('page');
 
         $this->renderScript = 'user/add.phtml';
     }
 
     public function editAction() {
-        $this->view->page = $this->_getParam('page');
+        $this->view->page = $this->params()->fromQuery('page');
 
-        $db = Core_Db_Table::getDefaultAdapter();
-        $id = $this->_getParam('id');
+        
+        $id = $this->params()->fromQuery('id');
         $history = $db->fetchAll("select user_exam.allow_re_exam,user_exam.user_id,user_exam.nganh_nghe_id,user_exam.level,user_exam.id,user_exam.exam_date,user_pass.user_exam_id,nganh_nghe.title from user_exam JOIN nganh_nghe ON nganh_nghe.id=user_exam.nganh_nghe_id LEFT JOIN user_pass ON user_pass.user_exam_id=user_exam.id WHERE user_exam.user_id=$id ORDER BY user_exam.exam_date ASC");
         $this->view->history = $history;
 
@@ -39,7 +43,7 @@ class Admin_UserController extends Core_Controller_Action {
     public function allowreexamAction() {
         $user_id = $this->_request->getParam('user_id', null);
         $exam_id = $this->_request->getParam('exam_id', null);
-        $db = Core_Db_Table::getDefaultAdapter();
+        
         $db->query('UPDATE user_exam SET allow_re_exam=1 WHERE id=' . $exam_id)->execute();
         $this->_helper->redirector('edit', 'user', 'admin', array('id' => $user_id));
     }
@@ -47,16 +51,16 @@ class Admin_UserController extends Core_Controller_Action {
     public function cancelreexamAction() {
         $user_id = $this->_request->getParam('user_id', null);
         $exam_id = $this->_request->getParam('exam_id', null);
-        $db = Core_Db_Table::getDefaultAdapter();
+        
         $db->query('UPDATE user_exam SET allow_re_exam=0 WHERE id=' . $exam_id)->execute();
         $this->_helper->redirector('edit', 'user', 'admin', array('id' => $user_id));
     }
 
     public function ketquathiAction() {
-        $user_exam_id = $this->_getParam('user_exam_id');
+        $user_exam_id = $this->params()->fromQuery('user_exam_id');
         $html = \Application\Model\Userexam::getHtmlForExamResult($user_exam_id, $title_header);
 
-        $db = Core_Db_Table::getDefaultAdapter();
+        
         $row = $db->fetchRow("select "
                 . "DATE_FORMAT(user_exam.exam_date,'%Y_%m_%d') AS date,"
                 . "user.id "

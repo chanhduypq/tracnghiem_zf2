@@ -1,4 +1,4 @@
-<link href="<?php echo $this->baseUrl(); ?>/css/question.css?<?php echo substr(md5(microtime()),rand(0,26),5);?>" rel="stylesheet" type="text/css"/>
+<link href="<?php echo $this->basePath(); ?>/css/question.css?<?php echo substr(md5(microtime()),rand(0,26),5);?>" rel="stylesheet" type="text/css"/>
 <?php 
 
 if (isset($this->error) && $this->error != '') { ?>
@@ -8,13 +8,13 @@ if (isset($this->error) && $this->error != '') { ?>
     <?php
 }
 
-echo $this->render('review/partial/form_nganhnghe_capbac.phtml');
+echo $this->partial('application/review/partial/form_nganhnghe_capbac.phtml');
 ?>
 <div class="row-fluid">
     <div class="span12"></div>
 </div>
 <?php 
-echo $this->render('review/partial/form_question.phtml');
+echo $this->partial('application/review/partial/form_question.phtml');
 ?>
 
 

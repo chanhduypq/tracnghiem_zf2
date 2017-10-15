@@ -2,7 +2,7 @@
 <?php
 $questions = $this->questions;
 
-$db = Core_Db_Table::getDefaultAdapter();
+
 $config_exam = $db->fetchRow("SELECT * FROM config_exam");
 $minute_per_question = $config_exam['phut'];
 ?>

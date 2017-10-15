@@ -3,9 +3,9 @@ $items = $this->items;
 
 
 
-$auth = Zend_Auth::getInstance();
-if ($auth->hasIdentity()) {
-    $identity = $auth->getIdentity();
+$session = new \Zend\Session\Container('base');
+if ($session->offsetExists('user')) {
+    $identity = $session->offsetGet('user');
 }
 
 
@@ -26,7 +26,7 @@ if (isset($this->message)&&trim($this->message)!='') {
 <div class="row-fluid" style="padding-top:20px;">
     <div class="span12">
         <?php     
-        $buttons[]=array('onclick'=>"window.location = '".$this->baseUrl('/admin/nganhnghe/add/')."'",'label'=>'Thêm ngành nghề');
+        $buttons[]=array('onclick'=>"window.location = '".$this->basePath('/admin/nganhnghe/add/')."'",'label'=>'Thêm ngành nghề');
         echo $this->toolbar($buttons);
         ?>
     </div>
@@ -54,11 +54,11 @@ if (isset($this->message)&&trim($this->message)!='') {
 
 
                 <div class="span2">
-                    <a class="remove" title="Click vào đây để xóa" href="<?php echo $this->baseUrl('/admin/nganhnghe/delete/id/') . $item['id']; ?>">
-                        <img class="delete question" src="<?php echo $this->baseUrl("/images/icon/delete-icon.png"); ?>"/>                                                   
+                    <a class="remove" title="Click vào đây để xóa" href="<?php echo $this->basePath('/admin/nganhnghe/delete/id/') . $item['id']; ?>">
+                        <img class="delete question" src="<?php echo $this->basePath("/images/icon/delete-icon.png"); ?>"/>                                                   
                     </a>
-                    <a title="Click vào đây để sửa" href="<?php echo $this->baseUrl('/admin/nganhnghe/edit/id/') . $item['id']; ?>">
-                        <img style="width: 48px;height: 48px;cursor: pointer;" src="<?php echo $this->baseUrl("/images/icon/ico_edit.png"); ?>" onclick="editItem(this);"/>                                                   
+                    <a title="Click vào đây để sửa" href="<?php echo $this->basePath('/admin/nganhnghe/edit/id/') . $item['id']; ?>">
+                        <img style="width: 48px;height: 48px;cursor: pointer;" src="<?php echo $this->basePath("/images/icon/ico_edit.png"); ?>" onclick="editItem(this);"/>                                                   
                     </a>
                 </div>
 

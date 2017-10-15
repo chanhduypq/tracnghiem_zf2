@@ -1,10 +1,11 @@
 <?php
+namespace Admin\Controller;
 
-class Admin_ExcelController extends Core_Controller_Action {
+use Zend\Mvc\Controller\AbstractActionController;
+use Zend\View\Model\ViewModel;
+use Zend\Session\Container;
+class ExcelController extends AbstractActionController {
 
-    public function init() {
-        parent::init();
-    }
 
     public function indexAction() {
         $this->view->message = $this->getMessage();
@@ -28,7 +29,7 @@ class Admin_ExcelController extends Core_Controller_Action {
                 $path = UPLOAD . "/public/excel/" . $item;
                 move_uploaded_file($_FILES['excel']['tmp_name'], $path);
 
-                $db = Core_Db_Table::getDefaultAdapter();
+                
 
                 $db->query('TRUNCATE TABLE nganh_nghe')->execute();
                 $db->query('TRUNCATE TABLE answer')->execute();

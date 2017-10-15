@@ -1,19 +1,23 @@
 <?php
+namespace Application\Controller;
 
-class QuestionController extends Core_Controller_Action {
+use Zend\Mvc\Controller\AbstractActionController;
+use Zend\View\Model\ViewModel;
+use Zend\Session\Container;
+class QuestionController extends AbstractActionController {
 
-    public function init() {
-        parent::init();
-        $this->view->headTitle('Ngân hàng câu hỏi', true);
-    }
+//    public function init() {
+//        parent::init();
+//        $this->view->headTitle('Ngân hàng câu hỏi', true);
+//    }
 
     
 
     public function indexAction() 
     {
 
-        $nganhNgheId = $this->_getParam('nganhNgheId');
-        $level = $this->_getParam('level');
+        $nganhNgheId = $this->params()->fromQuery('nganhNgheId');
+        $level = $this->params()->fromQuery('level');
 
         if (\Zend\Common\Numeric::isInteger($level) === FALSE) {
             $level = 1;
@@ -22,7 +26,7 @@ class QuestionController extends Core_Controller_Action {
             $nganhNgheId = 0;
         }
 
-        $this->view->questionArray = \Application\Model\Question::getQuestionsByLevelAndNganhNgheIdForPageQuestion($nganhNgheId, $level);
+        return new ViewModel(array('questionArray' => \Application\Model\Question::getQuestionsByLevelAndNganhNgheIdForPageQuestion($nganhNgheId, $level)));
     }
 
     

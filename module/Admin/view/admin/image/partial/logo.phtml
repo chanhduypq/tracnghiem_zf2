@@ -12,10 +12,10 @@ $logo = $this->logo;
                     <?php
                     if ($logo['file_name'] != "") {
                         
-                        Core_Common_Image::echoImage($this->baseUrl($logo['file_name']), 70, 70, 'height');
+                        Core_Common_Image::echoImage($this->basePath($logo['file_name']), 70, 70, 'height');
                     } else {
                         ?>
-                        <img alt="" src="<?php echo $this->baseUrl('/images/img_photo01.jpg'); ?>">
+                        <img alt="" src="<?php echo $this->basePath('/images/img_photo01.jpg'); ?>">
                         <?php
                     }
                     ?>

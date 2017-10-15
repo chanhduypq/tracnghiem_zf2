@@ -45,17 +45,17 @@ if (isset($this->message)&&trim($this->message)!='') {
     echo $this->toolbar($buttons);
     ?>
 </div>
-<form name="form" enctype="multipart/form-data" id="form" action="<?php echo $this->baseUrl('/admin/image/save'); ?>" method="post">
+<form name="form" enctype="multipart/form-data" id="form" action="<?php echo $this->basePath('/admin/image/save'); ?>" method="post">
     <fieldset style="padding: 20px;">
-        <?php echo $this->render('image/partial/logo.phtml');?>
+        <?php echo $this->partial('admin/image/partial/logo.phtml');?>
     </fieldset>
 
     <fieldset style="padding: 20px;">
-        <?php echo $this->render('image/partial/hinhnen.phtml');?> 
+        <?php echo $this->partial('admin/image/partial/hinhnen.phtml');?> 
     </fieldset>
     
     <fieldset style="padding: 20px;">
-        <?php echo $this->render('image/partial/bg.phtml');?> 
+        <?php echo $this->partial('admin/image/partial/bg.phtml');?> 
     </fieldset>
     
 </form>

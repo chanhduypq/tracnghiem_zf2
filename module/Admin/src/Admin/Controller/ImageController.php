@@ -1,12 +1,13 @@
 <?php
+namespace Admin\Controller;
 
-class Admin_ImageController extends Core_Controller_Action 
+use Zend\Mvc\Controller\AbstractActionController;
+use Zend\View\Model\ViewModel;
+use Zend\Session\Container;
+class ImageController extends AbstractActionController 
 {
 
-    public function init() 
-    {
-        parent::init();
-    }
+
 
     public function indexAction()
     {
@@ -38,7 +39,7 @@ class Admin_ImageController extends Core_Controller_Action
             $item_image = "/images/database/logo/" . $item_image;
             move_uploaded_file($_FILES['logo']['tmp_name'], $path);
 
-            $resultLogo = $item->save($item_image, $this->_getParam("dynamic"));
+            $resultLogo = $item->save($item_image, $this->getRequest()->getPost("dynamic"));
             if ($resultLogo['file_name'] != $item_image && trim($_FILES['logo']['name']) != "") {
                 $path = UPLOAD . "/public" . $resultLogo['file_name'];
                 unlink($path);

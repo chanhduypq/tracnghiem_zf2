@@ -73,7 +73,7 @@ $row_exam_time = $this->row_exam_time;
     </div>
 
 </div>
-<script src="<?php echo $this->baseUrl(); ?>/jquery-ui-1.10.3/ui/i18n/jquery.ui.datepicker-vi.js"></script>
+<script src="<?php echo $this->basePath(); ?>/jquery-ui-1.10.3/ui/i18n/jquery.ui.datepicker-vi.js"></script>
 <script>
     jQuery(function ($){
         $( "#date" ).datepicker({
@@ -82,7 +82,7 @@ $row_exam_time = $this->row_exam_time;
           dateFormat: "dd/mm/yy",
           showWeek: true,
             showOn: "button",
-            buttonImage: "<?php echo $this->baseUrl('/images/calendar/calendar.gif');?>",
+            buttonImage: "<?php echo $this->basePath('/images/calendar/calendar.gif');?>",
             buttonImageOnly: true,
             buttonText: 'Click để chọn ngày',
             option:$.datepicker.regional['vi']

@@ -1,16 +1,16 @@
 <?php
+namespace Admin\Controller;
 
-class Admin_ExamController extends Core_Controller_Action 
+use Zend\Mvc\Controller\AbstractActionController;
+use Zend\View\Model\ViewModel;
+use Zend\Session\Container;
+class ExamController extends AbstractActionController 
 {
 
-    public function init() 
-    {
-        parent::init();
-    }
 
     public function indexAction() 
     {
-        $db = Core_Db_Table::getDefaultAdapter();
+        
         $data = $this->_request->getPost();
         $error_config_exam = '';
         $message= $this->getMessage();
@@ -75,7 +75,7 @@ class Admin_ExamController extends Core_Controller_Action
             $eh = $temp[0];
             $em = $temp[1];
 
-            $db = Core_Db_Table::getDefaultAdapter();
+            
 
             $db->query("update exam_time set `date`='" . $data['date'] . "',sh=" . $data['sh'] . ",sm=" . $data['sm'] . ",eh=$eh,em=$em")->execute();
 

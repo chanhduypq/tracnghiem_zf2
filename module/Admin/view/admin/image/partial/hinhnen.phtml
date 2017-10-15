@@ -12,10 +12,10 @@ $hinhnen = $this->hinhnen;
                     <?php
                     if ($hinhnen['file_name'] != "") {
                         
-                        Core_Common_Image::echoImage($this->baseUrl($hinhnen['file_name']), 70, 70, 'height');
+                        Core_Common_Image::echoImage($this->basePath($hinhnen['file_name']), 70, 70, 'height');
                     } else {
                         ?>
-                        <img alt="" src="<?php echo $this->baseUrl('/images/img_photo01.jpg'); ?>">
+                        <img alt="" src="<?php echo $this->basePath('/images/img_photo01.jpg'); ?>">
                         <?php
                     }
                     ?>
