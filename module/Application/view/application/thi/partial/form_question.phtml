@@ -2,8 +2,11 @@
 <?php
 $questions = $this->questions;
 
-
-$config_exam = $db->fetchRow("SELECT * FROM config_exam");
+ $model = new \Application\Model\Table('');
+$select = new \Zend\Db\Sql\Select();
+$select->from('config_exam');
+$config_exam = $model->selectWith($select)->toArray();
+$config_exam=$config_exam[0];
 $minute_per_question = $config_exam['phut'];
 ?>
 <div class="row-fluid" style="margin-bottom: 20px;">

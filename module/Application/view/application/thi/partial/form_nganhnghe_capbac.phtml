@@ -5,7 +5,10 @@ if ($session->offsetExists('user')) {
     $user_id = $identity['id'];
 }
 
-$row = $db->fetchRow("SELECT * FROM user_exam WHERE user_id=" . $user_id . " ORDER BY exam_date DESC LIMIT 1");
+$model = new \Application\Model\Table('');
+$select = new \Zend\Db\Sql\Select();
+$select->from('user_exam')->where("user_id=" . $user_id)->order("exam_date DESC")->limit(1);
+$row = $model->selectWith($select)->toArray();
 $nganhNghes = $this->nganhNghes;
 ?>
 <form method="POST" id="form1" onsubmit="return false;">
