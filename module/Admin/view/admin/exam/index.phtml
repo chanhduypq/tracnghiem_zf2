@@ -1,0 +1,29 @@
+<script type="text/javascript" src="<?php echo $this->baseUrl('/js/jquery.number.js'); ?>"></script>
+<?php if (isset($this->message) && $this->message != '') { ?>
+    <div style="color: red;text-align: center;width: 100%;">
+        <h3><?php echo $this->message; ?></h3>
+    </div>
+    <?php
+}
+?>
+<div class="row-fluid" style="margin-top: 20px;margin-bottom: 20px;">
+    <?php     
+    $buttons[]=array('onclick'=>'document.form.submit();','label'=>'Lưu');
+    echo $this->toolbar($buttons);
+    ?>
+</div>
+
+<form name="form" enctype="multipart/form-data" id="form" method="post"> 
+    <fieldset>
+        <?php echo $this->render('exam/partial/examtime.phtml');?>
+    </fieldset>
+
+    <fieldset>
+        <?php echo $this->render('exam/partial/config.phtml');?> 
+    </fieldset>
+    
+    <fieldset>
+        <?php echo $this->render('exam/partial/level.phtml');?> 
+    </fieldset>
+    
+</form>

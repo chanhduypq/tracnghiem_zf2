@@ -1,0 +1,153 @@
+<style>
+    table.history{
+        width: 100%;
+    }
+    table.history th,table.history td{
+        border: 1px solid black;
+    }
+</style>
+<?php
+
+if (isset($this->message)&&trim($this->message)!='') {
+    ?>
+    <div class="row-fluid" style="margin-top: 20px;">
+        <div class="span3"></div>
+        <div class="span6" align='center' style='color: red;'>
+            <?php
+            echo $this->message;
+            ?>
+        </div>
+        <div class="span3"></div>
+    </div>
+    <?php
+}
+?>
+<div class="row-fluid" style="margin-top: 10px;">
+    <?php     
+    $buttons[]=array('onclick'=>"window.location = '".$this->baseUrl('/admin/user/index/page/'.$this->page)."'",'label'=>'Quay lại');
+    $buttons[]=array('onclick'=>'document.form.submit();','label'=>'Lưu');
+    echo $this->toolbar($buttons);
+    ?>
+</div>
+<form name="form" enctype="multipart/form-data" id="form" action="<?php echo $this->url(); ?>" method="post">
+    <div class="row-fluid" style="margin-top: 10px;">
+        <div class="span4"></div>
+
+        <div class="span12">
+            <?php echo $this->form($this, $this->form, 1, $echo_form_tag = FALSE); ?>
+        </div>
+
+    </div>
+
+</form>   
+<?php
+$history = $this->history;
+if (is_array($history) && count($history) > 0) {
+    ?>
+    <div class="row-fluid" style="margin-top: 10px;">
+        <h3 style="width: 100%;text-align: center;">Lịch sử thi</h3>
+        <table class="history">
+            <thead>
+                <tr>
+                    <th>Thời gian thi</th>
+                    <th>Ngành nghề</th>
+                    <th>Cấp bậc</th>
+                    <th>Kết quả</th>
+                    <th>Chi tiết</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($history as $row) { ?>
+                    <tr>
+                        <td style="text-align: center;"><?php echo date('d/m/Y', strtotime($row['exam_date'])); ?></td>
+                        <td style="text-align: center;"><?php echo $row['title']; ?></td>
+                        <td style="text-align: center;">
+                            <?php
+                            if ($row['level'] == \Application\Model\Question::BAC1) {
+                                echo 'Bậc 1';
+                            } else if ($row['level'] == \Application\Model\Question::BAC2) {
+                                echo 'Bậc 2';
+                            } else if ($row['level'] == \Application\Model\Question::BAC3) {
+                                echo 'Bậc 3';
+                            } else if ($row['level'] == \Application\Model\Question::BAC4) {
+                                echo 'Bậc 4';
+                            } else if ($row['level'] == \Application\Model\Question::BAC5) {
+                                echo 'Bậc 5';
+                            }
+                            ?>
+                        </td>
+                        <td style="text-align: center;">
+                            <?php
+                            if ($row['user_exam_id'] == '') {
+                                echo 'Rớt';
+                            } else {
+                                echo 'Đậu';
+                            }
+                            ?>
+
+                        </td>
+                        <td style="text-align: center;">
+                            <a class="download-result" href="/admin/user/ketquathi/user_exam_id/<?php echo $row['id']; ?>">
+                                Chi tiết
+                            </a>
+                        </td>
+                        <td style="text-align: center;margin: 0 auto;width: 10%;">
+                            <?php
+                            if ($row['user_exam_id'] == '') {
+                                if ($row['allow_re_exam'] == '0') {
+                                    ?>
+                                     <button onclick="allowReExam(<?php echo $row['user_id'] . ',' . $row['id']; ?>);">Cho thi lại</button>
+                                    <?php
+                                } else {
+                                    ?>
+                                     <span style="font-size: 20px;">Đã cấp quyền thi lại</span><br>
+                                    <button onclick="cancelReExam(<?php echo $row['user_id'] . ',' . $row['id']; ?>);">Không cho thi lại</button>
+                                    <?php
+                                }
+                            }
+                            ?>
+
+                        </td>
+                    </tr>
+                    <?php
+                }
+                ?>
+            </tbody>
+        </table>
+    </div>
+    <?php
+}
+?>
+<script src="<?php echo $this->baseUrl();?>/js/jquery.fileDownload.js?<?php echo substr(md5(microtime()),rand(0,26),5);?>" type="text/javascript"></script>
+<script type="text/javascript">
+    function allowReExam(user_id, exam_id) {
+        window.location = '<?php echo $this->baseUrl(); ?>/admin/user/allowreexam/user_id/' + user_id + '/exam_id/' + exam_id;
+    }
+    function cancelReExam(user_id, exam_id) {
+        window.location = '<?php echo $this->baseUrl(); ?>/admin/user/cancelreexam/user_id/' + user_id + '/exam_id/' + exam_id;
+    }
+    
+    jQuery(function ($) {
+        
+        $(document).on("click", "a.download-result", function () {
+            $.fileDownload($(this).prop('href'), {
+                preparingMessageHtml: "Hệ thống đang download, vui lòng chờ cho đến khi hoàn thành.",
+                failMessageHtml: "Đường truyền internet bị lỗi. Vui lòng thử lại sau."
+            });
+            return false; 
+        });
+
+
+        $("form").find("input").eq(0).focus();
+
+
+        danh_xung_node = $("#danh_xung").parent().parent().clone();
+        $("#danh_xung").parent().parent().remove();
+        $("tbody").eq(0).prepend($(danh_xung_node));
+
+    });
+
+</script>
+
+
+

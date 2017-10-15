@@ -1,0 +1,92 @@
+<?php
+
+$question_ids = $this->question_ids;
+if (isset($this->message)&&trim($this->message)!='') {
+    ?>
+    <div class="row-fluid" style="margin-top: 20px;">
+        <div class="span3"></div>
+        <div class="span6" align='center' style='color: red;'>
+            <?php
+            echo $this->message;
+            ?>
+        </div>
+        <div class="span3"></div>
+    </div>
+    <?php
+}
+?>
+<div class="row-fluid" style="margin-top: 10px;">
+    <?php     
+    $buttons[]=array('onclick'=>"window.location = '".$this->baseUrl('/admin/nganhnghe/')."'",'label'=>'Quay lại');
+    $buttons[]=array('onclick'=>'document.form.submit();','label'=>'Lưu');
+    echo $this->toolbar($buttons);
+    ?>
+</div>
+<form name="form" enctype="multipart/form-data" id="form" action="<?php echo $this->url(); ?>" method="post">
+    <div class="row-fluid" style="margin-top: 10px;">
+        <div class="span4"></div>
+
+        <div class="span12">
+            <?php echo $this->form($this, $this->form, 1, $echo_form_tag = FALSE); ?>
+        </div>
+
+    </div>
+
+    <div class="row-fluid" style="margin-top: 10px;">
+
+
+
+        <?php
+        if ($this->form->getElement('question_id') == null) {
+
+            $rows = Core_Db_Table::getDefaultAdapter()->query("select * from question")->fetchAll();
+            
+            if (is_array($rows) && count($rows) > 0) {
+                ?>
+                <h3 style="text-align: center;">Chọn câu hỏi</h3>
+
+                <?php foreach ($rows as $menu) { ?>
+                    <div style="margin-left: 50px;">
+
+                        <label>
+
+                            <input type="checkbox" name="question_id[]" value="<?php echo $menu['id']; ?>"<?php if (in_array($menu['id'], $question_ids)) { ?> checked<?php } ?>/>
+                            <?php
+                            echo $menu['content'];
+                            ?>
+                        </label>
+
+                    </div>    
+
+
+
+                    <?php
+                }
+            }
+        }
+        ?>
+    </div>    
+
+
+
+
+</form>    
+
+<script type="text/javascript">
+    jQuery(function ($) {
+        $("#sortable").sortable({
+            placeholder: "ui-state-highlight"
+        });
+        $("#sortable").disableSelection();
+        $(".sortable").sortable({
+            placeholder: "ui-state-highlight"
+        });
+        $(".sortable").disableSelection();
+
+        $("#form").find("input[type='text']").eq(0).focus();
+    });
+
+</script>
+
+
+

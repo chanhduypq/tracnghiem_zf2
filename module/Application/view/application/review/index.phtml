@@ -1,0 +1,20 @@
+<link href="<?php echo $this->baseUrl(); ?>/css/question.css?<?php echo substr(md5(microtime()),rand(0,26),5);?>" rel="stylesheet" type="text/css"/>
+<?php 
+
+if (isset($this->error) && $this->error != '') { ?>
+    <div style="color: red;text-align: center;">
+        <?php echo $this->error; ?>
+    </div>
+    <?php
+}
+
+echo $this->render('review/partial/form_nganhnghe_capbac.phtml');
+?>
+<div class="row-fluid">
+    <div class="span12"></div>
+</div>
+<?php 
+echo $this->render('review/partial/form_question.phtml');
+?>
+
+

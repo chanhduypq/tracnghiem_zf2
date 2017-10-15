@@ -1,0 +1,77 @@
+<div class="row-fluid" style="margin-top: 10px;">
+    <div class="span12"></div>
+    <?php if (isset($this->error_config_exam) && $this->error_config_exam != '') { ?>
+        <div style="color: red;text-align: center;width: 100%;padding-top: 20px;">
+            <h3><?php echo $this->error_config_exam; ?></h3>
+        </div>
+        <?php
+    }
+    ?>
+    <div class="span12">
+
+        <table width="100%"> 
+            <tbody>  
+                <?php
+                $levels = $this->levels;
+                foreach ($levels as $level) {
+                    if ($level['level'] == '1') {
+                        $readonlyParent='readonly="readonly"';
+                    } else {
+                        $readonlyParent='';
+                    }
+                    $jsonArray = json_decode(html_entity_decode($level['data']));
+                    ?>
+
+                    <tr>                 
+                        <td style="width:5%;text-align: left;">
+                            Bậc <?php echo $level['level']; ?>:
+                        </td>
+                        <?php 
+                        foreach ($jsonArray as $key => $value) { 
+                            if($readonlyParent!=''){
+                                $readonly='readonly="readonly"';
+                            }
+                            else{
+                                if ( (($level['level'] == '2'||$level['level'] == '3')&&($key=='b1'||$key=='b3')) || (($level['level'] == '4'||$level['level'] == '5')&&($key=='b1')) ) {
+                                    $readonly='readonly="readonly"';
+                                } else {
+                                    $readonly='';
+                                }
+                            }
+                            
+                            ?>
+                            <td style="text-align: left;width: 10%;padding: 0;">
+                                <?php
+                                echo "$key:";
+                                ?>
+                                <input class="level" <?php echo $readonly;?> type="text" name="<?php echo $key; ?>[]" style="width: 30px;" value="<?php echo $value; ?>">				                 </td>
+
+                            </td>
+                            <?php
+                        }
+                        ?>
+
+                    </tr>
+                <input type="hidden" name="level_id[]" value="<?php echo $level['id']; ?>"/>
+                <?php
+            }
+            ?>
+
+
+
+
+            </tbody>
+        </table>
+    </div>
+
+</div>
+<script type="text/javascript">
+    jQuery(function ($){
+       $('input').not( "#date" ).number( true, 0,'','' );      
+       $('input.level').not( "#date" ).keyup(function (){
+          if($(this).val()>100){
+              $(this).val('100');
+          } 
+       });
+    });
+</script>

@@ -1,0 +1,58 @@
+<?php 
+use Zend\Session\Container;
+$session = new Container('base');
+
+$menu_items = $GLOBALS['menu_items'];
+if ($session->offsetExists('user')) {
+    $hrefThi = $this->basePath('/application/thi');
+    $hrefReview = $this->basePath('/application/review');
+    $idReview = $idThi = '';
+} else {
+    $hrefThi = $hrefReview = 'javascript:void(0)';
+    $idThi = ' id="thi"';
+    $idReview = ' id="review"';
+}
+$temp = explode('\\', $this->getHelperPluginManager()->getServiceLocator()->get('Application')->getMvcEvent()->getRouteMatch()->getParam('controller', 'index'));
+$controller = strtolower($temp[count($temp) - 1]);
+?>
+<div class="span12" style="padding: 20px;">
+    <ul id="topnav">
+        <li<?php if ($controller == 'index') echo ' class="active"'; ?>><a href="<?php echo $this->basePath(); ?>/"><?php echo $menu_items[0]; ?></a></li>
+        <li<?php
+        echo $idThi;
+        if ($controller == 'thi')
+            echo ' class="active"';
+        ?>><a href="<?php echo $hrefThi; ?>"><?php echo $menu_items[1]; ?></a></li>                        
+        <li<?php
+        echo $idReview;
+        if ($controller == 'review')
+            echo ' class="active"';
+        ?>><a href="<?php echo $hrefReview; ?>"><?php echo $menu_items[2]; ?></a></li>                        
+        <li<?php if ($controller == 'question') echo ' class="active"'; ?>>
+            <a href="#"><?php echo $menu_items[3]; ?></a>
+            <ul style="background-color: white;" id="par">
+                <?php
+                $model = new \Application\Model\Table();
+                $model->setTableName('nganh_nghe');
+                $rows = $model->getAll();
+                foreach ($rows as $row) {
+                    ?>
+                    <li>
+                        <a href="#" style="color: black;"><?php echo $row['title']; ?></a>
+                        <ul style="margin-left: 60px;background-color: white;">
+                            <?php for ($i = 1; $i <= 5; $i++) { ?>
+                                <li><a href="<?php echo $this->basePath(); ?>/application/question/index/nganhNgheId/<?php echo $row['id']; ?>/level/<?php echo $i; ?>">Bậc <?php echo $i; ?></a></li>
+                                <?php
+                            }
+                            ?>
+                        </ul>
+                    </li> 
+                    <?php
+                }
+                ?>
+
+            </ul>
+        </li>
+        <li><a href="<?php echo $this->basePath(); ?>/application/index/guide"><?php echo $menu_items[4]; ?></a></li>                        
+    </ul>
+</div>

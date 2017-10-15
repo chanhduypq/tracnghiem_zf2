@@ -1,0 +1,44 @@
+<?php
+$item = $this->item;
+
+if (isset($this->message)&&trim($this->message)!='') {
+    ?>
+    <div style="color: red;text-align: center;width: 100%;">
+        <h3><?php echo $this->message; ?></h3>
+    </div>
+    <?php
+}
+?>
+<div class="row-fluid" style="margin-top: 20px;margin-bottom: 20px;">
+    <?php     
+    $buttons[]=array('onclick'=>'document.form.submit();','label'=>'Lưu');
+    echo $this->toolbar($buttons);
+    ?>
+</div>
+<div class="row-fluid">
+    <div class="span5"></div>
+    <div class="span7">
+        <form name="form" enctype="multipart/form-data" id="form" action="<?php echo $this->baseUrl('/admin/guide/save'); ?>" method="post">
+            <div class="row-fluid">
+                <div class="span12">
+                    <?php
+                    if ($item != "") {
+                        echo '<a href="' . $this->baseUrl() . '/admin/guide/download">download file hướng dẫn sử dụng hiện tại</a>';
+                    }
+                    ?>
+                </div>
+            </div>
+            <div class="row-fluid">
+                <div class="span12">
+                    <p>                                            
+                        <input type="file" name="hinhnen"/>
+                    </p>                
+                </div>
+            </div>
+
+
+        </form>
+    </div>
+
+</div>
+

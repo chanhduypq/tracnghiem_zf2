@@ -18,8 +18,10 @@ class IndexController extends AbstractActionController {
 
     public function indexAction() {
         $model = new \Application\Model\Table('home_content');
-        $rows = $model->getAll();
-        $row = $rows[0];
+        $row = $model->first();
+        
+//        $model=new \Application\Model\Question();
+//        var_dump($model->getQuestions($a));
         return new ViewModel(array('content' => $row['content']));
     }
 

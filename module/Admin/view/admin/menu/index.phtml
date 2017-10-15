@@ -1,0 +1,50 @@
+<?php
+
+if (isset($this->message)&&trim($this->message)!='') {
+    ?>
+    <div style="color: red;text-align: center;width: 100%;">
+        <h3><?php echo $this->message; ?></h3>
+    </div>
+    <?php
+}
+?>
+<div class="row-fluid" style="margin-top: 20px;margin-bottom: 20px;">
+    <?php     
+    $buttons[]=array('onclick'=>'document.form.submit();','label'=>'Lưu');
+    echo $this->toolbar($buttons);
+    ?>
+</div>
+<form name="form" id="form" action="<?php echo $this->url(); ?>" method="post">
+    <div class="row-fluid">
+        <div class="span12"></div>
+        <?php
+        $data = $this->data;
+        for ($i = 0; $i < count($data); $i++) {
+            if($i==0){
+                $label='Trang chủ';
+            }
+            else if($i==1){
+                $label='Thi trắc nghiệm';
+            }
+            else if($i==2){
+                $label='Ôn tập';
+            }
+            else if($i==3){
+                $label='Ngân hàng câu hỏi';
+            }
+            else if($i==4){
+                $label='Hướng dẫn sử dụng';
+            }
+            ?>
+            <div class="span12">
+                <div class="span2" style="text-align: right;"><?php echo $label; ?>:</div>
+                <div class="span10">
+                    <input type="text" name="text[]" value="<?php echo $data[$i]["text"]; ?>">                        
+                </div>
+                <input type="hidden" name="id[]" value="<?php echo $data[$i]["id"]; ?>"/>
+            </div>
+            <?php
+        }
+        ?>
+    </div>
+</form>

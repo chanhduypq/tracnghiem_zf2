@@ -1,0 +1,61 @@
+<script type="text/javascript">
+    function allowUpload(file) {
+        j = 0;
+        for (i = file.value.length - 1; i > - 1; i--)
+            if (file.value.charAt(i) == '.')
+            {
+                j = i;
+                break;
+            }
+        ext = "";
+        for (i = j + 1; i < file.value.length; i++)
+            ext += file.value.charAt(i);
+        ext = ext.toLowerCase();
+        a = new Array();
+        a.push("gif");
+        a.push("jpg");
+        a.push("jpeg");
+        a.push("png");
+        n = a.length;
+        for (i = 0; i < n; i++)
+            if (ext == a.pop()) {
+                return;
+            }
+
+        alert('Vui lòng chọn file ảnh.');
+        name=jQuery(file).attr('name');
+        jQuery(file).replaceWith("<input type='file' name='"+jQuery(file).attr('name')+"' onchange='allowUpload(this);' accept='image/*'/>");
+        jQuery('input[name="'+name+'"]').css("border-color", "red");
+        jQuery('input[name="'+name+'"]').focus();
+    }
+</script>
+<?php
+
+if (isset($this->message)&&trim($this->message)!='') {
+    ?>
+    <div style="color: red;text-align: center;width: 100%;">
+        <h3><?php echo $this->message; ?></h3>
+    </div>
+    <?php
+}
+?>
+<div class="row-fluid" style="margin-top: 20px;margin-bottom: 20px;">
+    <?php     
+    $buttons[]=array('onclick'=>'document.form.submit();','label'=>'Lưu');
+    echo $this->toolbar($buttons);
+    ?>
+</div>
+<form name="form" enctype="multipart/form-data" id="form" action="<?php echo $this->baseUrl('/admin/image/save'); ?>" method="post">
+    <fieldset style="padding: 20px;">
+        <?php echo $this->render('image/partial/logo.phtml');?>
+    </fieldset>
+
+    <fieldset style="padding: 20px;">
+        <?php echo $this->render('image/partial/hinhnen.phtml');?> 
+    </fieldset>
+    
+    <fieldset style="padding: 20px;">
+        <?php echo $this->render('image/partial/bg.phtml');?> 
+    </fieldset>
+    
+</form>

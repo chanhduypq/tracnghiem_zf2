@@ -1,0 +1,62 @@
+<script type="text/javascript" src="<?php echo $this->baseUrl(); ?>/ckeditor/ckeditor.js"></script>
+<script type="text/javascript">
+    jQuery(function ($) {
+        CKEDITOR.replace('editor1', {
+            language: 'en',
+            filebrowserUploadUrl: '/upload.php'
+        });        
+        
+        CKEDITOR.config.readOnly = true;
+    });
+
+</script>
+<?php
+
+if (isset($this->message)&&trim($this->message)!='') {
+    ?>
+    <div style="color: red;text-align: center;width: 100%;">
+        <h3><?php echo $this->message; ?></h3>
+    </div>
+    <?php
+}
+?>
+<div class="row-fluid" style="margin-top: 20px;margin-bottom: 20px;">
+    <?php     
+    $buttons[]=array('onclick'=>'document.form.submit();','label'=>'Lưu');
+    echo $this->toolbar($buttons);
+    ?>
+</div>
+<form name="form" enctype="multipart/form-data" id="form" action="<?php echo $this->baseUrl('/admin/headerpdf/save'); ?>" method="post">
+    <div class="row-fluid">
+        <div class="span12">
+
+                <div class="row-fluid" style="margin-top: 10px;">
+
+                    <div class="span12">
+                        <textarea rows="" cols="" name="content" id="editor1"><?php echo $this->content; ?></textarea>
+                    </div>
+
+                </div>
+
+        </div>
+    </div>
+    <div class="row-fluid">
+        <div class="span12"></div>
+        <?php
+        $data = json_decode($this->json);
+        for ($i = 0; $i < count($data); $i++) {
+            ?>
+            <div class="span12">
+                <div class="span1" style="text-align: right;">[<?php echo $i+1;?>]:</div>
+                <div class="span10">
+                    <input style="width: 100%;" type="text" name="text[]" value="<?php echo $data[$i]; ?>">
+                </div>
+                <div class="span1"></div>
+                
+            </div>
+            <?php
+        }
+        ?>        
+    </div>
+</form>
+

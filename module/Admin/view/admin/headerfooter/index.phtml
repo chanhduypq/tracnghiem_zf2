@@ -1,0 +1,26 @@
+<?php
+
+if (isset($this->message)&&trim($this->message)!='') {
+    ?>
+    <div style="color: red;text-align: center;width: 100%;">
+        <h3><?php echo $this->message; ?></h3>
+    </div>
+    <?php
+}
+?>
+<div class="row-fluid" style="margin-top: 20px;margin-bottom: 20px;">
+    <?php     
+    $buttons[]=array('onclick'=>'document.form.submit();','label'=>'Lưu');
+    echo $this->toolbar($buttons);
+    ?>
+</div>
+<form name="form" enctype="multipart/form-data" id="form" action="<?php echo $this->url(); ?>" method="post">
+    <fieldset style="padding: 20px;">
+        <?php echo $this->render('headerfooter/partial/header.phtml');?>
+    </fieldset>
+
+    <fieldset style="padding: 20px;">
+        <?php echo $this->render('headerfooter/partial/footer.phtml');?> 
+    </fieldset>
+    
+</form>

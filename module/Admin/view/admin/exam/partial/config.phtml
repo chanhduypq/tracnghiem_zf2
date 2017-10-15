@@ -1,0 +1,64 @@
+<?php 
+$row_config_exam=$this->row_config_exam;
+?>
+<div class="row-fluid" style="margin-top: 10px;">
+
+    <?php 
+    if (isset($this->error_config_exam) && $this->error_config_exam != '') { ?>
+        <div style="color: red;text-align: center;width: 100%;padding-top: 20px;">
+            <h3><?php echo $this->error_config_exam; ?></h3>
+        </div>
+        <?php
+    }
+    ?>
+    <div class="span12">
+
+        <table width="100%"> 
+            <tbody>     
+                <tr>                 
+                    <td style="width:30%;text-align: right;"><label for="phut" class="optional">Thời gian để hoàn thành một câu hỏi(phút):<span style="color:red;" class="required"> *</span></label>
+                    </td>
+                    <td>
+
+                        <input type="text" name="phut" style="width: 50px;" id="phut" value="<?php echo $row_config_exam['phut']; ?>">				                 </td>
+
+                </tr>
+                <tr>                 
+                    <td style="width:30%;text-align: right;"><label for="number" class="optional">Tổng số câu hỏi cho một lần thi:<span style="color:red;" class="required"> *</span></label>
+                    </td>
+                    <td>
+
+                        <input type="text" name="number" style="width: 50px;" id="number" value="<?php echo $row_config_exam['number']; ?>">				                 </td>
+
+                </tr>
+                <tr>                 
+                    <td style="width:30%;text-align: right;"><label for="phan_tram" class="required">Tỉ lệ phần trăm số câu đúng để đạt:<span style="color:red;" class="required"> *</span></label>
+                    </td>
+                    <td>
+
+                        <select name="phan_tram" id="phan_tram" style="width: 65px;">
+
+                            <?php
+                            for ($i = 1; $i <= 10; $i++) {
+
+                                if (round(floatval($i * 0.1), 1) == round(floatval($row_config_exam['phan_tram']), 1)) {
+                                    $select = ' selected="selected"';
+                                } else {
+                                    $select = '';
+                                }
+                                ?>
+                                <option value="<?php echo $i * 0.1; ?>"<?php echo $select; ?>><?php echo $i * 10; ?></option>
+                                <?php
+                            }
+                            ?>
+                        </select>					                 </td>
+
+                </tr>
+
+
+
+            </tbody>
+        </table>
+    </div>
+
+</div>

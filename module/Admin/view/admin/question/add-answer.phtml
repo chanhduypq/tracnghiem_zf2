@@ -1,0 +1,50 @@
+<?php 
+
+$nganhnghe_ids = $this->nganhnghe_ids;
+if (isset($this->message)&&trim($this->message)!='') {
+    ?>
+    <div class="row-fluid" style="margin-top: 20px;">
+        <div class="span3"></div>
+        <div class="span6" align='center' style='color: red;'>
+            <?php
+            echo $this->message;
+            ?>
+        </div>
+        <div class="span3"></div>
+    </div>
+    <?php
+}
+?>
+<div class="row-fluid" style="margin-top: 10px;">
+    <?php     
+    $buttons[]=array('onclick'=>"window.location = '".$this->baseUrl('/admin/question/index/page/'.$this->page)."'",'label'=>'Quay lại');
+    $buttons[]=array('onclick'=>'document.form.submit();','label'=>'Lưu');
+    echo $this->toolbar($buttons);
+    ?>
+</div>
+<form name="form" enctype="multipart/form-data" id="form" action="<?php echo $this->url(); ?>" method="post">
+    <div class="row-fluid" style="margin-top: 10px;">
+        <div class="span4"></div>
+
+        <div class="span12">
+            <?php echo $this->form($this, $this->form, 1, $echo_form_tag = FALSE); ?>
+        </div>
+
+    </div>     
+
+
+</form>    
+
+<script type="text/javascript">
+    jQuery(function ($) {
+
+
+        $("form").find("textarea").eq(0).focus();
+
+    });
+
+</script>
+
+
+
+

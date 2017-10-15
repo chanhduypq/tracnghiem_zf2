@@ -1,0 +1,102 @@
+<?php
+$items = $this->items;
+
+
+
+$auth = Zend_Auth::getInstance();
+if ($auth->hasIdentity()) {
+    $identity = $auth->getIdentity();
+}
+?>
+<script type="text/javascript">
+    function editItem(img) {
+        jQuery("form#edit-form").find('input[type="hidden"]').eq(0).val(jQuery(img).parent().parent().attr("id")).attr("name", "id");
+        jQuery("form#edit-form").submit();
+
+    }
+
+
+</script>
+<?php
+
+if (isset($this->message)&&trim($this->message)!='') {
+    ?>
+    <div class="row-fluid" style="margin-top: 20px;">
+        <div class="span3"></div>
+        <div class="span6" align='center' style='color: red;'>
+            <?php
+            echo $this->message;
+            ?>
+        </div>
+        <div class="span3"></div>
+    </div>
+    <?php
+}
+?>
+<div class="row-fluid" style="padding-top:20px;">
+
+    <div class="span12">
+        <?php     
+        $buttons[]=array('onclick'=>"window.location = '".$this->baseUrl('/admin/user/add/page/'.$this->page)."'",'label'=>'Thêm user');
+        echo $this->toolbar($buttons);
+        ?>
+    </div>
+</div>
+
+<div class="row-fluid list">
+
+    <?php
+    foreach ($items as $item) {
+        ?>
+
+        <div class="row-fluid item" id="<?php echo $item['id']; ?>">
+            <div class="span5">
+                <?php echo $item['danh_xung'] . ' ' . $item['full_name'] ?>
+            </div>
+            <div class="span5">
+                <?php echo $item['email']; ?>
+            </div>
+            <div class="span2">
+                <a class="remove" title="Click vào đây để xóa" href="<?php echo $this->baseUrl('/admin/user/delete/id/') . $item['id']; ?>">
+                    <img class="delete question" src="<?php echo $this->baseUrl("/images/icon/delete-icon.png"); ?>"/>                                                   
+                </a>
+
+                <a href="<?php echo $this->baseUrl('/admin/user/edit/id/') . $item['id'] . '/page/' . $this->page; ?>">
+                    <img class="edit question" title="Click vào đây để sửa" style="cursor: pointer;" src="<?php echo $this->baseUrl("/images/icon/ico_edit.png"); ?>" onclick="editItem(this);"/>                                                   
+                </a>
+            </div>
+
+        </div>
+
+
+
+
+        <?php
+    }
+
+    $url = $this->url();
+    $temp = explode('page', $url);
+    if (is_array($temp) && count($temp) == 2) {
+        $url = $temp[0];
+    }
+    ?>
+
+</div>
+<form method="post" action="<?php echo $url; ?>">
+    <div class="row-fluid">
+        <div class="span12">
+            <?php if ($this->total > $this->limit) { ?>
+                <table style="width: 100%;">
+                    <tfoot>
+                        <tr>
+                            <td colspan="3" style="width: 100%;"><?php echo $this->paginationControl($this->paginator, 'Sliding', array('_partials/paginator.phtml', 'default')); ?></td>
+                        </tr>
+                    </tfoot>
+                </table>
+                <?php
+            }
+            ?>
+        </div>
+    </div>
+</form>
+

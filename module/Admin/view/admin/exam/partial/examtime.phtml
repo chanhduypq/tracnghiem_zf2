@@ -1,0 +1,100 @@
+<?php 
+$date = $this->date;
+$row_exam_time = $this->row_exam_time;
+?>
+<div class="row-fluid" style="margin-top: 10px;">
+    <div class="span12">
+
+        <table width="100%"> 
+            <tbody>     
+                <tr>                 
+                    <td style="width:30%;text-align: right;"><label for="date" class="optional">Ngày:<span style="color:red;" class="required"> *</span></label>
+                    </td>
+                    <td>
+
+                        <input readonly="readonly" type="text" name="date" id="date" style="width: 80px;" value="<?php echo $date; ?>"></td>
+
+                </tr>
+                <tr>                 
+                    <td style="width:30%;text-align: right;"><label for="sh" class="required">Giờ bắt đầu:<span style="color:red;" class="required"> *</span></label>
+                    </td>
+                    <td>
+
+                        <select name="sh" id="sh" style="width: 60px;">
+
+                            <?php
+                            for ($i = 1; $i < 24; $i++) {
+                                if ($i == $row_exam_time['sh']) {
+                                    $select = ' selected="selected"';
+                                } else {
+                                    $select = '';
+                                }
+                                ?>
+                                <option value="<?php echo $i; ?>"<?php echo $select; ?>><?php echo ($i<10?'0':'').$i; ?></option>
+                                <?php
+                            }
+                            ?>
+                        </select>  :  
+                        <select name="sm" id="sm" style="width: 60px;">
+
+                            <?php
+                            for ($i = 0; $i < 60; $i++) {
+                                if ($i == $row_exam_time['sm']) {
+                                    $select = ' selected="selected"';
+                                } else {
+                                    $select = '';
+                                }
+                                ?>
+                                <option value="<?php echo $i; ?>"<?php echo $select; ?>><?php echo ($i<10?'0':'').$i; ?></option>
+                                <?php
+                            }
+                            ?>
+                        </select>
+                    </td>
+
+                </tr>
+
+
+                <tr>                 
+                    <td style="width:30%;text-align: right;">
+                        <label for="eh" class="required">
+                            Giờ kết thúc:                                
+                        </label>
+                    </td>
+                    <td style="vertical-align: text-top;padding-left: 5px;">
+                        <?php echo $row_exam_time['eh'] . ':' .($row_exam_time['em']<10?'0':''). $row_exam_time['em']; ?>
+                    </td>
+
+                </tr>
+
+
+            </tbody>
+        </table>
+    </div>
+
+</div>
+<script src="<?php echo $this->baseUrl(); ?>/jquery-ui-1.10.3/ui/i18n/jquery.ui.datepicker-vi.js"></script>
+<script>
+    jQuery(function ($){
+        $( "#date" ).datepicker({
+          changeMonth: true,
+          changeYear: true,
+          dateFormat: "dd/mm/yy",
+          showWeek: true,
+            showOn: "button",
+            buttonImage: "<?php echo $this->baseUrl('/images/calendar/calendar.gif');?>",
+            buttonImageOnly: true,
+            buttonText: 'Click để chọn ngày',
+            option:$.datepicker.regional['vi']
+          <?php 
+          if(isset($this->minDate)){?>
+          ,minDate:"<?php echo $this->minDate;?>"
+          <?php 
+          }
+          ?>         
+          
+        });
+        
+        $('img.ui-datepicker-trigger').css('margin-left','10px').css('margin-bottom','10px').css('cursor','pointer');
+    });
+</script>
