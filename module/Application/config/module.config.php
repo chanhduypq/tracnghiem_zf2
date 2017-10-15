@@ -10,6 +10,20 @@
 return array(
     'router' => array(
         'routes' => array(
+//            'review' => array(
+//                 'type'    => 'segment',
+//                 'options' => array(
+//                     'route'    => '/review[/][:action][/:id]',
+//                     'constraints' => array(
+//                         'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+//                         'id'     => '[0-9]+',
+//                     ),
+//                     'defaults' => array(
+//                         'controller' => 'Application\Controller\Review',
+//                         'action'     => 'index',
+//                     ),
+//                 ),
+//             ),
             'home' => array(
                 'type' => 'Zend\Mvc\Router\Http\Literal',
                 'options' => array(
@@ -73,7 +87,10 @@ return array(
     ),
     'controllers' => array(
         'invokables' => array(
-            'Application\Controller\Index' => 'Application\Controller\IndexController'
+            'Application\Controller\Index' => 'Application\Controller\IndexController',
+            'Application\Controller\Review' => 'Application\Controller\ReviewController',
+            'Application\Controller\Thi' => 'Application\Controller\ThiController',
+            'Application\Controller\Question' => 'Application\Controller\QuestionController',
         ),
     ),
     'view_manager' => array(
