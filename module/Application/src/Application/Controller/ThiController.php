@@ -59,8 +59,8 @@ class ThiController extends AbstractActionController
     private function saveDB($request) 
     {
         $date = date('Y-m-d');
-        $h = $request->get('h');
-        $m = $request->get('i');
+        $h = $request['h'];
+        $m = $request['i'];
         if($m==0){
             $m=59;
             $h--;
@@ -115,7 +115,8 @@ class ThiController extends AbstractActionController
                     $is_correct = 0;
                 }
 
-                DB::table('user_exam_detail')->insert(array(
+                $modelUserExamdetail = new \Application\Model\Userexamdetail();
+                $modelUserExamdetail->insert(array(
                     'user_exam_id' => $userExamId,
                     'question_id' => $questionIds[$i],
                     'answer_id' => ($answerIds[$i] == '' ? '-1' : $answerIds[$i]),
@@ -134,7 +135,8 @@ class ThiController extends AbstractActionController
             
 
             if ($count_correct >= $config_exam['phan_tram'] * count($questionIds)) {
-                DB::table('user_pass')->insert(array(
+                $modelUserpass = new \Application\Model\Userpass();
+                $modelUserpass->insert(array(
                     'user_id' => $this->getUserId(),
                     'nganh_nghe_id' => $request['nganh_nghe_id_form2'],
                     'level' => $request['level_form2'],
@@ -174,7 +176,8 @@ class ThiController extends AbstractActionController
             $answersJsons = $request['answers_json'];
             $count_correct = 0;
             
-            DB::table('user_exam_detail')->where('user_exam_id=' . $userExamId)->delete();
+            $modelUserExamdetail = new \Application\Model\Userexamdetail();
+            $modelUserExamdetail->delete('user_exam_id=' . $userExamId);
             for ($i = 0, $n = count($questionIds); $i < $n; $i++) {
                 if ($answerSigns[$i] == $dapanSigns[$i]) {
                     $is_correct = 1;
@@ -183,7 +186,8 @@ class ThiController extends AbstractActionController
                     $is_correct = 0;
                 }
 
-                DB::table('user_exam_detail')->insert(array(
+                $modelUserExamdetail = new \Application\Model\Userexamdetail();
+                $modelUserExamdetail->insert(array(
                     'user_exam_id' => $userExamId,
                     'question_id' => $questionIds[$i],
                     'answer_id' => ($answerIds[$i] == '' ? '-1' : $answerIds[$i]),
@@ -204,7 +208,8 @@ class ThiController extends AbstractActionController
             $config_exam=$config_exam[0];
 
             if ($count_correct >= $config_exam['phan_tram'] * count($questionIds)) {
-                DB::table('user_pass')->insert(array(
+                $modelUserpass = new \Application\Model\Userpass();
+                $modelUserpass->insert(array(
                     'user_id' => $this->getUserId(),
                     'nganh_nghe_id' => $request['nganh_nghe_id_form2'],
                     'level' => $request['level_form2'],
@@ -214,7 +219,9 @@ class ThiController extends AbstractActionController
             } else {
                 $allow_re_exam = 1;
             }
-            DB::table('user_exam')->where('id=' . $userExamId)->update(array('allow_re_exam' => $allow_re_exam, 'nganh_nghe_id' => $request->get('nganh_nghe_id_form2'), 'level' => $request->get('level_form2')));
+            $modelUserexam = new \Application\Model\Userexam();
+            $modelUserexam->update(array('allow_re_exam' => $allow_re_exam, 'nganh_nghe_id' => $request['nganh_nghe_id_form2'], 'level' => $request['level_form2']), 'id=' . $userExamId);
+            
 //            DB::commit();
         } catch (Exception $e) {
 //            DB::rollback();

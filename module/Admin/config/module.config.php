@@ -2,7 +2,7 @@
 /**
  * Zend Framework (http://framework.zend.com/)
  *
- * @link      http://github.com/zendframework/ZendSkeletonApplication for the canonical source repository
+ * @link      http://github.com/zendframework/ZendSkeletonAdmin for the canonical source repository
  * @copyright Copyright (c) 2005-2014 Zend Technologies USA Inc. (http://www.zend.com)
  * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
@@ -11,6 +11,126 @@ return array(
     'router' => array(
         'routes' => array(
             'home' => array(
+                'type' => 'Zend\Mvc\Router\Http\Literal',
+                'options' => array(
+                    'route'    => '/admin',
+                    'defaults' => array(
+                        'controller' => 'Admin\Controller\Index',
+                        'action'     => 'index',
+                    ),
+                ),
+            ),
+            'home1' => array(
+                'type' => 'Zend\Mvc\Router\Http\Literal',
+                'options' => array(
+                    'route'    => '/admin/exam',
+                    'defaults' => array(
+                        'controller' => 'Admin\Controller\Exam',
+                        'action'     => 'index',
+                    ),
+                ),
+            ),
+            'home2' => array(
+                'type' => 'Zend\Mvc\Router\Http\Literal',
+                'options' => array(
+                    'route'    => '/admin/excel',
+                    'defaults' => array(
+                        'controller' => 'Admin\Controller\Excel',
+                        'action'     => 'index',
+                    ),
+                ),
+            ),
+            'home3' => array(
+                'type' => 'Zend\Mvc\Router\Http\Literal',
+                'options' => array(
+                    'route'    => '/admin/guide',
+                    'defaults' => array(
+                        'controller' => 'Admin\Controller\Guide',
+                        'action'     => 'index',
+                    ),
+                ),
+            ),
+            'home4' => array(
+                'type' => 'Zend\Mvc\Router\Http\Literal',
+                'options' => array(
+                    'route'    => '/admin/headerpdf',
+                    'defaults' => array(
+                        'controller' => 'Admin\Controller\Headerpdf',
+                        'action'     => 'index',
+                    ),
+                ),
+            ),
+            'home5' => array(
+                'type' => 'Zend\Mvc\Router\Http\Literal',
+                'options' => array(
+                    'route'    => '/admin/headerfooter',
+                    'defaults' => array(
+                        'controller' => 'Admin\Controller\Headerfooter',
+                        'action'     => 'index',
+                    ),
+                ),
+            ),
+            'home6' => array(
+                'type' => 'Zend\Mvc\Router\Http\Literal',
+                'options' => array(
+                    'route'    => '/admin/image',
+                    'defaults' => array(
+                        'controller' => 'Admin\Controller\Image',
+                        'action'     => 'index',
+                    ),
+                ),
+            ),
+            'home7' => array(
+                'type' => 'Zend\Mvc\Router\Http\Literal',
+                'options' => array(
+                    'route'    => '/admin/homecontent',
+                    'defaults' => array(
+                        'controller' => 'Admin\Controller\Homecontent',
+                        'action'     => 'index',
+                    ),
+                ),
+            ),
+            'home8' => array(
+                'type' => 'Zend\Mvc\Router\Http\Literal',
+                'options' => array(
+                    'route'    => '/admin/menu',
+                    'defaults' => array(
+                        'controller' => 'Admin\Controller\Menu',
+                        'action'     => 'index',
+                    ),
+                ),
+            ),
+            'home9' => array(
+                'type' => 'Zend\Mvc\Router\Http\Literal',
+                'options' => array(
+                    'route'    => '/admin/nganhnghe',
+                    'defaults' => array(
+                        'controller' => 'Admin\Controller\Nganhnghe',
+                        'action'     => 'index',
+                    ),
+                ),
+            ),
+            'home10' => array(
+                'type' => 'Zend\Mvc\Router\Http\Literal',
+                'options' => array(
+                    'route'    => '/admin/question',
+                    'defaults' => array(
+                        'controller' => 'Admin\Controller\Question',
+                        'action'     => 'index',
+                    ),
+                ),
+            ),
+            'home11' => array(
+                'type' => 'Zend\Mvc\Router\Http\Literal',
+                'options' => array(
+                    'route'    => '/admin/user',
+                    'defaults' => array(
+                        'controller' => 'Admin\Controller\User',
+                        'action'     => 'index',
+                    ),
+                ),
+            ),
+            'home12' => array(
                 'type' => 'Zend\Mvc\Router\Http\Literal',
                 'options' => array(
                     'route'    => '/',
@@ -29,7 +149,7 @@ return array(
                 'options' => array(
                     'route'    => '/application',
                     'defaults' => array(
-                        '__NAMESPACE__' => 'Application\Controller',
+                        '__NAMESPACE__' => 'Admin\Controller',
                         'controller'    => 'Index',
                         'action'        => 'index',
                     ),
@@ -73,7 +193,19 @@ return array(
     ),
     'controllers' => array(
         'invokables' => array(
-            'Admin\Controller\Index' => 'Admin\Controller\IndexController'
+            'Admin\Controller\Index' => 'Admin\Controller\IndexController',
+            'Admin\Controller\Exam' => 'Admin\Controller\ExamController',
+            'Admin\Controller\Excel' => 'Admin\Controller\ExcelController',
+            'Admin\Controller\Guide' => 'Admin\Controller\GuideController',
+            'Admin\Controller\Headerfooter' => 'Admin\Controller\HeaderfooterController',
+            'Admin\Controller\Headerpdf' => 'Admin\Controller\HeaderpdfController',
+            'Admin\Controller\Homecontent' => 'Admin\Controller\HomecontentController',
+            'Admin\Controller\Image' => 'Admin\Controller\ImageController',
+            'Admin\Controller\Menu' => 'Admin\Controller\MenuController',
+            'Admin\Controller\Nganhnghe' => 'Admin\Controller\NganhngheController',
+            'Admin\Controller\Question' => 'Admin\Controller\QuestionController',
+            'Admin\Controller\User' => 'Admin\Controller\UserController',
+            'Application\Controller\Index' => 'Application\Controller\IndexController',
         ),
     ),
     'view_manager' => array(

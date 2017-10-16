@@ -24,6 +24,8 @@ abstract class AbstractActionController extends AbstractController
      * @var string
      */
     protected $eventIdentifier = __CLASS__;
+    
+    public $model;
 
     /**
      * Default action if none provided

@@ -94,8 +94,8 @@ class ImageController extends AbstractActionController
             }
         }
 
-        Core::message()->addSuccess('Lưu thành công');
-        $this->_helper->redirector('index', 'image', 'admin');
+        $session = new \Zend\Session\Container('base');$session->offsetSet('message', 'Lưu thành công');
+        return $this->redirect()->toUrl('/admin/image'); 
     }
 
 }

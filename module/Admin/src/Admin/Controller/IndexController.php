@@ -16,20 +16,23 @@ class IndexController extends AbstractActionController
         if ($session->offsetExists('user')) {
             $identity = $session->offsetGet('user');
             if (isset($identity['user']) && $identity['user'] == 'admin') {
-                $this->_helper->redirector('index', 'nganhnghe', 'admin');
+                return $this->redirect()->toUrl('/admin/nganhnghe'); 
             }
         }
 
-        $loginResult = $this->getRequest()->getPost('loginResult');
-        if ($loginResult == '0') {
-            $this->view->loginResult = "Thông tin bạn vừa nhập không đúng.";
-            $session=new Zend_Session_Namespace('login');
-            $username=$session->username;
-            $password=$session->password;
+        $loginResult = $this->params()->fromQuery('loginResult');
+        if ($loginResult === '0') {
+            $loginResult = "Thông tin bạn vừa nhập không đúng.";
+            $session = new \Zend\Session\Container('base');
+            $username=$session->offsetGet('username');
+            $password=$session->offsetGet('password');
             $session->unsetAll();
         }
-        $this->view->username = $username;
-        $this->view->password = $password;
+        else{
+            $loginResult='';
+        }
+        
+        return new ViewModel(array('username' => $username,'password' => $password,'loginResult' => $loginResult));
     }
 
     public function loginAction() 
@@ -37,19 +40,23 @@ class IndexController extends AbstractActionController
         $username = $this->getRequest()->getPost('username', null);
         $password = $this->getRequest()->getPost('password', null);
         if ($username == null || $password == NULL) {
-            $this->_helper->redirector('index', 'index', 'admin');
+            
+            return $this->redirect()->toUrl('/admin/index'); 
         } else {
             $index = new \Admin\Model\IndexMapper();
             if ($index->loginAdmin($username, $password)) {
-                $session = new Zend_Session_Namespace('url');
-                $controller = $session->controller;
-                $session->unsetAll();
-                $this->_helper->redirector('index', $controller, 'admin');
+                $session = new \Zend\Session\Container('base');
+                $controller = $session->offsetGet('controller');
+                $session->offsetUnset('controller');
+                
+                return $this->redirect()->toUrl('/admin/'.$controller); 
             } else {
-                $session=new Zend_Session_Namespace('login');
-                $session->username=$this->getRequest()->getPost('username');
-                $session->password=$this->getRequest()->getPost('password');
-                $this->_helper->redirector('index', 'index', 'admin', array('loginResult' => '0'));
+                
+                $session = new \Zend\Session\Container('base');
+                $session->offsetSet('username', $this->getRequest()->getPost('username'));
+                $session->offsetSet('password', $this->getRequest()->getPost('password'));
+                
+                return $this->redirect()->toUrl('/admin/index/?loginResult=0'); 
             }
         }
     }
@@ -58,7 +65,8 @@ class IndexController extends AbstractActionController
     {
         $session = new \Zend\Session\Container('base');
         $auth->clearIdentity();
-        $this->_helper->redirector('index', 'index', 'admin');
+        return $this->redirect()->toUrl('/admin/index'); 
+        
     }
 
     public function changepasswordAction() 

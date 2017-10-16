@@ -51,10 +51,12 @@ class GuideController extends AbstractActionController
                 $path = UPLOAD . "/public/guide/" . $item_image;
                 move_uploaded_file($_FILES['hinhnen']['tmp_name'], $path);
             }
-            Core::message()->addSuccess('Lưu thành công');
+            
+            $session = new \Zend\Session\Container('base');$session->offsetSet('message', 'Lưu thành công');
         }
 
-        $this->_helper->redirector('index', 'guide', 'admin');
+        
+        return $this->redirect()->toUrl('/admin/guide'); 
     }
 
 }

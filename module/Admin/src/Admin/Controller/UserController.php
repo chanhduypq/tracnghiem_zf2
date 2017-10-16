@@ -6,15 +6,17 @@ use Zend\View\Model\ViewModel;
 use Zend\Session\Container;
 class UserController extends AbstractActionController {
 
-    public function init() {
-        parent::init();
-        $this->model = new \Application\Model\User();
-        $this->form = new Admin_Form_User();
-    }
+//    public function init() {
+//        parent::init();
+//        $this->model = new \Application\Model\User();
+//        $this->form = new Admin_Form_User();
+//    }
 
     public function indexAction() {
+        $this->model = new \Application\Model\User();
         $rows = $this->model->getUsers($this->total, $this->limit, $this->start);
-        $this->view->items = $rows;
+        $params['items'] = $rows;
+        return new ViewModel($params);
     }
 
     public function addAction() {
@@ -41,19 +43,33 @@ class UserController extends AbstractActionController {
     }
 
     public function allowreexamAction() {
-        $user_id = $this->_request->getParam('user_id', null);
-        $exam_id = $this->_request->getParam('exam_id', null);
+        $user_id = $this->params()->fromQuery('user_id', null);
+        $exam_id = $this->params()->fromQuery('exam_id', null);
         
-        $db->query('UPDATE user_exam SET allow_re_exam=1 WHERE id=' . $exam_id)->execute();
-        $this->_helper->redirector('edit', 'user', 'admin', array('id' => $user_id));
+        
+        $adapter = new \Zend\Db\Adapter\Adapter(array(
+                    'driver' => 'Mysqli',
+                    'database' => 'tracnghiem',
+                    'username' => 'root',
+                    'password' => ''
+                ));
+        $adapter->createStatement('UPDATE user_exam SET allow_re_exam=1 WHERE id=' . $exam_id)->execute();
+        return $this->redirect()->toUrl('/admin/user/edit/?id='.$user_id); 
     }
 
     public function cancelreexamAction() {
-        $user_id = $this->_request->getParam('user_id', null);
-        $exam_id = $this->_request->getParam('exam_id', null);
+        $user_id = $this->params()->fromQuery('user_id', null);
+        $exam_id = $this->params()->fromQuery('exam_id', null);
         
-        $db->query('UPDATE user_exam SET allow_re_exam=0 WHERE id=' . $exam_id)->execute();
-        $this->_helper->redirector('edit', 'user', 'admin', array('id' => $user_id));
+        $adapter = new \Zend\Db\Adapter\Adapter(array(
+                    'driver' => 'Mysqli',
+                    'database' => 'tracnghiem',
+                    'username' => 'root',
+                    'password' => ''
+                ));
+        $adapter->createStatement('UPDATE user_exam SET allow_re_exam=0 WHERE id=' . $exam_id)->execute();
+        
+        return $this->redirect()->toUrl('/admin/user/edit/?id='.$user_id); 
     }
 
     public function ketquathiAction() {

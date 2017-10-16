@@ -37,9 +37,13 @@ if (isset($this->message)&&trim($this->message)!='') {
 
     <div class="span12">
         <?php     
-        $buttons[]=array('onclick'=>"window.location = '".$this->basePath('/admin/user/add/page/'.$this->page)."'",'label'=>'Thêm user');
-        echo $this->toolbar($buttons);
+//        $buttons[]=array('onclick'=>"window.location = '".$this->basePath('/admin/user/add/page/'.$this->page)."'",'label'=>'Thêm user');
+//        echo $this->toolbar($buttons);
         ?>
+        <div class="span12" style="margin-bottom: 20px;text-align: right;">
+                        <input onclick="window.location = '/admin/user/add/page/1'" type="button" value="Thêm user" class="button">
+                        
+        </div>
     </div>
 </div>
 

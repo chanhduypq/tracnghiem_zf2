@@ -46,13 +46,13 @@ class IndexController extends AbstractActionController {
 
     public function logoutAction() {
         $session = new Container('base');
-        $session->offsetSet('user', NULL);
+        $session->offsetUnset('user');
         return $this->redirect()->toUrl('/');   
     }
 
     public function logoutajaxAction() {
         $session = new Container('base');
-        $session->offsetSet('user', NULL);
+        $session->offsetUnset('user');
         exit;
     }
 

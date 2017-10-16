@@ -1,64 +1,9 @@
 <?php
-$model = new \Application\Model\Table();
-$model->setTableName('layout_content');
-$rows = $model->getAll();
-$menu_items = array();
-$logo = array('file_name' => '/images/dien_luc.jpg', 'dynamic' => '1');
-$header_text = $header_text_dynamic = $footer_text = $hinh_nen = '';
-foreach ($rows as $row) {
-    $header_text = $row['header_text'];
-    $header_text_dynamic = $row['dynamic_header_text'];
-    $logo = array('file_name' => $row['file_name'], 'dynamic' => $row['dynamic_logo']);
-    $menu_items[] = $row['menu_text'];
-    $footer_text = $row['footer_text'];
-    $hinh_nen = $row['hinh_nen_file_name'];
-}
-$GLOBALS['menu_items'] = $menu_items;
 echo $this->doctype();
 ?>
-
-<html lang="en">
+<html>
     <head>
-        <meta charset="utf-8">
-        <?php // echo $this->headTitle('ZF2 '. $this->translate('Skeleton Application'))->setSeparator(' - ')->setAutoEscape(false) ?>
-
-        <?php
-//        echo $this->headMeta()
-//            ->appendName('viewport', 'width=device-width, initial-scale=1.0')
-//            ->appendHttpEquiv('X-UA-Compatible', 'IE=edge')
-        ?>
-
-        <!-- Le styles -->
-        <?php
-//        echo $this->headLink(array('rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath() . '/img/favicon.ico'))
-//                        ->prependStylesheet($this->basePath() . '/bootstrap/css/bootstrap.css')
-//                        ->prependStylesheet($this->basePath() . '/bootstrap/css/bootstrap-responsive.css')
-//                        ->prependStylesheet($this->basePath() . '/css/menu/menu.css')
-//                        ->prependStylesheet($this->basePath() . '/css/top_bottom.css')
-//                        ->prependStylesheet($this->basePath() . '/css/phan_trang.css')
-//                        ->prependStylesheet($this->basePath() . '/css/style.css')
-//                        ->prependStylesheet($this->basePath() . '/jquery-ui-1.10.3/themes/smoothness/jquery-ui.css')
-//                        ->prependStylesheet($this->basePath() . '/css/jquery.cluetip.css')
-//                        ->prependStylesheet($this->basePath() . '/css/jquery.alerts.css')                
-//                ;
-        ?>
-
-        <!-- Scripts -->
-        <?php
-//        echo $this->headScript()
-//            ->prependFile($this->basePath() . '/js/jquery-2.0.3.js')
-//            ->prependFile($this->basePath() . '/bootstrap/js/bootstrap.js')
-//                ->prependFile($this->basePath() . '/js/jquery.textarea-expander.js')
-//                ->prependFile($this->basePath() . '/js/jquery.cluetip.js')
-//                ->prependFile($this->basePath() . '/jquery-ui-1.10.3/ui/jquery-ui.js')
-//                ->prependFile($this->basePath() . '/js/page_loader/jquery.queryloader2.js')
-//                ->prependFile($this->basePath() . '/js/jquery.alerts.js')
-//                ->prependFile($this->basePath() . '/js/jquery.dropotron.min.js')
-//                ->prependFile($this->basePath() . '/js/jquery.cycle.all.js')
-//                ->prependFile($this->basePath() . '/js/animation_text/textTyper.js')
-////            ->prependFile($this->basePath() . '/js/respond.min.js', 'text/javascript', array('conditional' => 'lt IE 9',))
-//        ; 
-        ?>
+        <meta http-equiv="content-type" content="text/html;charset=utf-8;" />
         <script type="text/javascript" src="<?php echo $this->basePath(); ?>/js/jquery-2.0.3.js"></script>
         <!--bootstrap-->
         <link href="<?php echo $this->basePath(); ?>/bootstrap/css/bootstrap.css" rel="stylesheet" type="text/css"/>
@@ -67,7 +12,7 @@ echo $this->doctype();
         <!--end bootstrap-->
         <!--menu-->
         <link href="<?php echo $this->basePath('/css/menu/menu.css'); ?>" media="screen" rel="stylesheet" type="text/css" />				 
-        <!--end menu-->  
+        <!--end menu-->   
         <!-- top bottom-->
         <link href="<?php echo $this->basePath(); ?>/css/top_bottom.css" rel="stylesheet" type="text/css"/>
         <!-- end top bottom-->
@@ -78,49 +23,31 @@ echo $this->doctype();
 
         <link rel="stylesheet" href="<?php echo $this->basePath('/jquery-ui-1.10.3/themes/smoothness/jquery-ui.css'); ?>" type="text/css"/>
         <link rel="stylesheet" type="text/css" href="<?php echo $this->basePath(); ?>/css/jquery.cluetip.css" media="all" />
-
+        <link href="<?php echo $this->basePath(); ?>/css/toolbar.css" rel="stylesheet" type="text/css"/>
+        
         <script type="text/javascript" src="<?php echo $this->basePath(); ?>/js/jquery.textarea-expander.js"></script>
         <script type="text/javascript" src="<?php echo $this->basePath(); ?>/js/jquery.cluetip.js"></script>
         <script type="text/javascript" src="<?php echo $this->basePath(); ?>/jquery-ui-1.10.3/ui/jquery-ui.js"></script>          
         <!--progress load page-->
         <script type="text/javascript" src="<?php echo $this->basePath('/js/page_loader/jquery.queryloader2.js'); ?>"></script>
         <!--end progress load page-->
-
-
+        
+       
         <script type="text/javascript" src="<?php echo $this->basePath(); ?>/js/jquery.alerts.js"></script>
         <link href="<?php echo $this->basePath(); ?>/css/jquery.alerts.css" rel="stylesheet" type="text/css"/>
-
+          
         <!-- append form for click in index page-->
-        <!--<script type="text/javascript" src="<?php echo $this->basePath(); ?>/js/build_form_click.js"></script>-->
+        <script type="text/javascript" src="<?php echo $this->basePath(); ?>/js/build_form_click.js"></script>
         <!-- end append form for click in index page-->
-
+        
         <script type="text/javascript" src="<?php echo $this->basePath(); ?>/js/jquery.dropotron.min.js"></script>
 
 
-        <!--hiệu ứng chuyển động ảnh-->
-        <?php
-        if ($logo['dynamic'] == "1") {
-            ?>
-            <script type="text/javascript" src="<?php echo $this->basePath('/js/jquery.cycle.all.js'); ?>"></script>
-            <?php
-        }
-        ?>
-        <!--end hiệu ứng chuyển động ảnh-->
-        <!--chạy chữ-->
-        <?php
-        if ($header_text_dynamic == "1" && trim($header_text) != '') {
-            ?>
-            <script type="text/javascript" src="<?php echo $this->basePath('/js/animation_text/textTyper.js'); ?>"></script>
-            <?php
-        }
-        ?>
-
         <script type="text/javascript">
-
             /**
              * index.phtml             
              */
-            $(window).scroll(function () {
+            $(window).scroll(function() {
                 if ($(this).scrollTop() > 100) {
                     $("#gotop").removeAttr("href");
                     $("#gotop").stop().animate({
@@ -162,25 +89,83 @@ echo $this->doctype();
             /**
              * end index.phtml
              **/
-            jQuery(function ($) {
-<?php
-if ($logo['dynamic'] == "1") {
-    ?>
-                    $('#logo_header').cycle({
-                        fx: 'zoom', sync: false, delay: -2000
-                    });
-    <?php
-}
-?>
-<?php
-if ($header_text_dynamic == "1" && trim($header_text) != '') {
-    ?>
-                    $('div#simpleDiv').textTyper({repeatAnimation: true, repeatTimes: 100, speed: 50});
-    <?php
-}
-?>
+            jQuery(function($) {
+                function sub(){
+                    if(!validate())
+                        return;
+                    <?php echo 'url="'.$this->basePath('/admin/index/ajaxchangepassword').'";';?>    	
+                    jQuery.post(url,{'oldPassword':jQuery('input#password').val(),'newPassword':jQuery('input#newPassword').val()},function(resp){
+                      
+                            if(resp==''){
+                            alert('Thành công');
+                                setTimeout(function (){
+                                    window.location.reload();
+                                },2000);
+                                    
+                            }
+                            else if(resp=='error'){
+                                
+                            jQuery('div#thongBao').html('Nhập không đúng password cũ.');
+                            }
 
+                    });     
+                }
+                function validate(){	
+                        oldPassword=document.getElementById('password');
+                        newPassword=document.getElementById('newPassword');
+                        confirmNewPassword=document.getElementById('confirmNewPassword');	
+                        if(oldPassword.value==null||oldPassword.value==""){
+                                oldPassword.setAttribute('style',"border-color: red;");
+                                oldPassword.focus();
+                                return false;
+                        }
+                        if(newPassword.value==null||newPassword.value==""){
+                                newPassword.setAttribute('style',"border-color: red;");
+                                newPassword.focus();
+                                return false;
+                        }
+                        if(newPassword.value.indexOf(" ",0)!=-1){
+                                newPassword.setAttribute('style',"border-color: red;");
+                                newPassword.focus(); 
+                                return false;
+                        }
+                        if(confirmNewPassword.value==null||confirmNewPassword.value==""){
+                                confirmNewPassword.setAttribute('style',"border-color: red;");
+                                confirmNewPassword.focus();
+                                return false;
+                        }
+                        if(newPassword.value!=confirmNewPassword.value){
+                                alert("Việc nhập password mới 2 lần không trùng nhau.");
+                                newPassword.setAttribute('style',"border-color: red;");
+                                confirmNewPassword.setAttribute('style',"border-color: red;");
+                                newPassword.focus();
+                                return false;
+                        }
+                        return true;
+                } 
+                dialog = $( "#dialog-form" ).dialog({
+                  autoOpen: false,
+                  height: 400,
+                  width: 350,
+                  modal: true,
+                  buttons: {
+                    "Đổi": sub,
+                    "Hủy": function() {
+                      dialog.dialog( "close" );
+                    }
+                  },
+                  close: function() {
+                    form[ 0 ].reset();
+                  }
+                });
 
+                form = dialog.find( "form#changePassForm" ).on( "submit", function( event ) {
+                  event.preventDefault();
+                  sub();
+                });
+                jQuery("a#changePassword").click(function() {
+                    dialog.dialog( "open" );          	          	         		
+                });
                 /**
                  * index.phtml
                  **/
@@ -192,13 +177,13 @@ if ($header_text_dynamic == "1" && trim($header_text) != '') {
                     completeAnimation: "grow",
                     minimumTime: 100
                 });
-                $("#gotop").click(function () {
+                $("#gotop").click(function() {
                     $("html, body").animate({
                         scrollTop: 0
                     }, "slow");
                     return false;
                 });
-                $("#gobottom").click(function () {
+                $("#gobottom").click(function() {
                     $("html, body").animate({
                         scrollTop: $('#footer').offset().top
                     }, 970);
@@ -206,197 +191,190 @@ if ($header_text_dynamic == "1" && trim($header_text) != '') {
                 });
                 /**
                  * end index.phtml
-                 **/
-<?php if (isset($this->questions) && count($this->questions) > 0) { ?>
-                    $("#fixed").css('top', $("#add-new").offset().top + $("#add-new").height() + 20);
-                    h = $(window).height() - ($("#add-new").offset().top + $("#add-new").height()) - 40;
-                    $("#fixed").css('height', h + 'px');
-    <?php
-}
-?>
+                 **/            
+                
+                
+
             });
+            
+            
+        
+        
+        
 
         </script>
+        <style>
+            .item:nth-child(odd) {
+                background: silver;
+            }
+
+            .item:nth-child(even) {
+                background: white;
+            }
+
+            /**
+             * danh sách mặt hàng
+             */            
+            table.mat_hang_list td div:only-child{
+                border-style: dotted;
+                border-width: 1px;
+                margin: 5px;
+                border-radius: 7px 7px 7px 7px;
+            }            
+            /**
+             * end danh sách mặt hàng
+             */    
+            
+            a.is_login:link {
+                text-decoration: none;
+                color: black;
+
+            }
+
+            a.is_login:visited {
+                text-decoration: none;
+                color: black;
+
+            }
+            
+            img.answer.delete{
+                width: 16px;
+                height: 16px;
+            }
+            img.question.delete{
+                width: 32px;
+                height: 32px;
+            }
+
+            img.answer.edit{
+                width: 24px;
+                height: 24px;
+            }
+            img.question.edit{
+                width: 48px;
+                height: 48px;
+            }
+            div.icon-down{
+                background-image: url('<?php echo $this->basePath(); ?>/images/down.png');
+            }
+            
+            a.remove:link {
+                text-decoration: none;
+            }
+
+            a.remove:visited {
+                text-decoration: none;
+            }
+            
+            fieldset{
+                border: 1px solid black;
+                margin-bottom: 50px;
+            }
+        </style>
+        
+       
 
     </head>
-    <!--    <body>
-            <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-                <div class="container">
-                    <div class="navbar-header">
-                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                        </button>
-                        <a class="navbar-brand" href="<?php echo $this->url('home') ?>"><img src="<?php echo $this->basePath('img/zf2-logo.png') ?>" alt="Zend Framework 2"/>&nbsp;<?php echo $this->translate('Skeleton Application') ?></a>
-                    </div>
-                    <div class="collapse navbar-collapse">
-                        <ul class="nav navbar-nav">
-                            <li class="active"><a href="<?php echo $this->url('home') ?>"><?php echo $this->translate('Home') ?></a></li>
-                        </ul>
-                    </div>/.nav-collapse 
+    <body style="background:black;">
+        <div id="dialog-form" title="Đổi mật khẩu" style="display: none;">
+          
+
+          <form id="changePassForm">
+              <div id="thongBao" style="padding-left: 100px;color: red;">  
                 </div>
-            </nav>
-            <div class="container">
-    <?php echo $this->content; ?>
-                <hr>
-                <footer>
-                    <p>&copy; 2005 - <?php echo date('Y') ?> by Zend Technologies Ltd. <?php echo $this->translate('All rights reserved.') ?></p>
-                </footer>
-            </div>  /container 
-    <?php echo $this->inlineScript() ?>
-        </body>-->
-
-    <body style="background:#f0f0f0;">
-
-        <?php echo $this->partial('layout/index/dialog.phtml'); ?>
-
-        <div class="container" style="padding-left: 10px;padding-right: 10px;">            
+                <div style="float: left;text-align: right;">Nhập password cũ:</div>
+                <div style="float: left;"><input id="password" type="password" name="oldPassword"/></div>
+                <div style="clear: both;"></div>
+                <div style="float: left;text-align: right;margin-top: 10px;">Nhập password mới:</div>
+                <div style="float: left;margin-top: 10px;"><input type="password" name="newPassword" id="newPassword"/></div>
+                <div style="clear: both;"></div>
+                <div style="float: left;text-align: right;margin-top: 10px;">Nhập lại password mới:</div>
+                <div style="float: left;margin-top: 10px;"><input type="password" name="confirmNewPassword" id="confirmNewPassword"/></div>
+                <div style="clear: both;"></div>
+                
+            
+          </form>
+        </div>
+        <div class="container">
             <!--header-->
-            <div class="container" style="padding-top: 30px;height: 100px;background-image: url('<?php echo $this->basePath($hinh_nen); ?>');background-repeat: no-repeat;background-size: 100% 100%;">
+
+            <div class="container" style="padding-top: 30px;background: #525252;height: 100px;">
                 <div class="row-fluid">
                     <div class="span3">
-                        <div class="row-fluid" style="padding-top: 10px;padding-left: 10px;">
-                            <?php
-                            if ($logo['dynamic'] == "1") {
-                                ?>
+<?php
 
-                                <div class="span12" id="logo_header">
-                                    <?php
-                                    \Zend\Common\Image::echoImage($this->basePath($logo['file_name']), 70, 70, 'height', array('id' => 'logo-img'));
-                                    \Zend\Common\Image::echoImage($this->basePath($logo['file_name']), 70, 70, 'height', array('id' => 'logo-img1'));
-                                    ?>
-                                </div>
-                                <?php
-                            } else {
-                                ?>
-                                <div class="span12" id="logo_header">
-                                    <?php
-                                    \Zend\Common\Image::echoImage($this->basePath($logo['file_name']), 70, 70, 'height', array('id' => 'logo-img'));
-                                    ?>
-                                </div>
-                                <?php
-                            }
-                            ?>
-                        </div>  
-
+\Zend\Common\Image::echoImage($this->basePath('/images/dien_luc.jpg'), 70, 70, 'height', array('id' => 'logo-img'));
+?>
+                        
 
                     </div>
                     <div class="span5">
-                        <div class="row-fluid" <?php
-                        if ($header_text_dynamic == "1" && trim($header_text) != '') {
-                            echo ' id="simpleDiv"';
-                        }
-                        ?> style="font-size: 30px;line-height: 1.3;text-align: center;color: #c1976c;font-family: serif;padding-top: 0;">
-                            <div class="span12"><?php echo $header_text; ?></div>
+                        <div class="row-fluid" style="font-size: 30px;line-height: 1.3;text-align: center;color: #c1976c;font-family: serif;padding-top: 35px;">
+                            <div class="span12">Điện lực</div>
                         </div>  
                     </div>
                     <div class="span4">
-                        <?php echo $this->partial('layout/index/auth.phtml'); ?>
-
+                        
+                        <?php
+					          use Zend\Session\Container;
+$session = new Container('base');
+						      if($session->offsetExists('user'))
+						      {
+						          $identity=$session->offsetGet('user');
+                                                          if(isset($identity['user'])&&$identity['user']=='admin'){?>
+                                                              <div style="float: right;margin-right: 10px;">
+                                                                  <a class="is_login" style="color: white;" href="#" id="changePassword">
+                                                                      <div style="background-color: #006666;padding: 5px;border-radius: 5px;margin-bottom: 10px;">Đổi mật khẩu</div>                                                                      
+                                                                  </a>                                                                  
+                                                                  <a class="is_login" style="color: white;" href="<?php echo $this->basePath('/admin/index/logout');?>">
+                                                                      <div style="background-color: #333333;padding: 5px;border-radius: 5px;">Sign out</div>                                                                      
+                                                                  </a>
+                                                              </div>
+                                                          <?php     
+                                                          }
+						          
+						          
+						      }				           
+					          ?>
                     </div>
+
+
+                    
                 </div>
+                
+
             </div>            
             <!--end header-->
             <!--middle-->
             <!--above-->                           
-            <div class="row-fluid" style="margin-top: 10px;">
-                <?php echo $this->partial('layout/index/menu.phtml'); ?>
+            <div class="row-fluid" style="margin-top: 10px;">                
+                <?php echo $this->partial('layout/admin/menu.phtml'); ?>
             </div>
             <!--end above-->
             <!--below-->    
-            <?php 
-            $model = new \Application\Model\Table();
-            $model->setTableName('home_content');
-            $rows = $model->getAll();
-            $row = $rows[0];
-            $bg = $row['bg'];
-            if ($bg != '') {
-                $bg = 'background-image: url(' . $this->basePath($bg) . ');background-size: cover;-webkit-background-size: cover;background-repeat: no-repeat;';
-            } else {
-                $bg = 'background: white;';
-            }
-            ?>
-            <div class="row-fluid" style="margin-top: 10px;<?php echo $bg; ?>">
+            <div class="row-fluid" style="margin-top: 10px;background: white;">
 
-                <!--<div class="span1">&nbsp;</div>-->
-                <div class="span12" style="min-height: 600px;padding-left: 20px;">
-
-                        <?php echo $this->content; ?>     
-                        <?php if (isset($this->questions) && count($this->questions) > 0) { ?>
-                        <div style="float: right;position: fixed;right: 0;width: 13%;background-color: blanchedalmond;max-height: 550px;overflow-y: auto;" id="fixed">
-                            <?php
-                            if (isset($this->questions)) {
-                                $questions = $this->questions;
-                            } else {
-                                $questions = array();
-                            }
-
-                            $i = 1;
-                            if (count($questions) > 100) {
-                                $num = 3;
-                            } else if (count($questions) > 9) {
-                                $num = 2;
-                            } else {
-                                $num = 1;
-                            }
-                            foreach ($questions as $question) {
-                                ?>
-
-                                <a class="goto" href="#question_<?php echo $i; ?>">
-                                    <button style="margin: 5px;">
-                                        <?php
-                                        if ($num == 3) {
-                                            if (strlen($i) == 1) {
-                                                echo '00' . $i;
-                                            } else if (strlen($i) == 2) {
-                                                echo '0' . $i;
-                                            } else {
-                                                echo $i;
-                                            }
-                                        } else if ($num == 2) {
-                                            if (strlen($i) == 1) {
-                                                echo '0' . $i;
-                                            } else {
-                                                echo $i;
-                                            }
-                                        } else {
-                                            echo $i;
-                                        }
-                                        ?>
-                                    </button>
-                                </a>                            
-                                <?php
-                                $i++;
-                            }
-                            ?>
-                        </div>
-                        <?php
-                    }
-                    ?>
+                <div class="span1"></div>
+                <div class="span10" style="min-height: 600px;">
+                    
+<?php echo $this->content; ?>           
+                    
                 </div>
-                <!--<div class="span1">&nbsp;</div>-->
+                <div class="span1"></div>
             </div>
 
             <!--end below--> 
             <!--end middle-->
             <!--footer-->            
-            <!--<div class="row-fluid" style="color:white;background-color: #c1976c;width: 200%;left: 0;margin-left: -50%;margin-top: 30px;margin-bottom: 30px;">-->	
-            <div class="row-fluid" style="color:white;background-color: #c1976c;margin-top: 30px;margin-bottom: 30px;">	
-                <!--<div class="span12" style="margin: 0 auto;text-align: center;">-->  
+            <div class="row-fluid" align="center" style="background:black;color:white;">	
                 <div class="span12">
-                    <?php
-// echo $this->footer(array('&COPY;Duong Viet Cuong', 'Địa chỉ: xxx Số điện thoại: yyy ............')); 
-                    echo $footer_text;
-                    ?>
+<?php //echo $this->footer(array('Shop áo quần 236', 'Địa chỉ: 146 Lê Duẩn - Đà Nẵng (vào 20m) Số điện thoại: 0919.319.827 - 0917.987.627 - 05113818071 (Gặp chị Tâm)')); ?>
                 </div>
             </div>
             <!--end footer-->
-
 
         </div>
         <a id="gotop" style="bottom: -50px; right: -50px;"></a>
         <a id="gobottom" style="top: 0px; right: 0px;"></a>
         <div id='footer'/>
     </body>
-</html>

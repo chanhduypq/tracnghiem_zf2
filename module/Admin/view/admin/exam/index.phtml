@@ -8,9 +8,13 @@
 ?>
 <div class="row-fluid" style="margin-top: 20px;margin-bottom: 20px;">
     <?php     
-    $buttons[]=array('onclick'=>'document.form.submit();','label'=>'Lưu');
-    echo $this->toolbar($buttons);
+//    $buttons[]=array('onclick'=>'document.form.submit();','label'=>'Lưu');
+//    echo $this->toolbar($buttons);
     ?>
+    <div class="span12" style="margin-bottom: 20px;text-align: right;">
+                    <input onclick="document.form.submit();" type="button" value="Lưu" class="button">
+
+    </div>
 </div>
 
 <form name="form" enctype="multipart/form-data" id="form" method="post"> 

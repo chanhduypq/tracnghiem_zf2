@@ -1,0 +1,30 @@
+<?php 
+$temp = explode('\\', $this->getHelperPluginManager()->getServiceLocator()->get('Application')->getMvcEvent()->getRouteMatch()->getParam('controller', 'index'));
+$controller_name = strtolower($temp[count($temp) - 1]);
+?>
+<div class="span12">
+    <ul id="topnav">
+
+        <li<?php if ($controller_name == 'nganhnghe') echo ' class="active"'; ?>><a href="<?php echo $this->basePath(); ?>/admin/nganhnghe">Ngành nghề</a></li>
+        <li<?php if ($controller_name == 'question') echo ' class="active"'; ?>><a href="<?php echo $this->basePath(); ?>/admin/question">Ngân hàng câu hỏi</a></li>
+        <li<?php if ($controller_name == 'user') echo ' class="active"'; ?>><a href="<?php echo $this->basePath(); ?>/admin/user">User</a></li>
+        <li<?php if ($controller_name == 'exam') echo ' class="active"'; ?>><a href="<?php echo $this->basePath(); ?>/admin/exam">Cài đặt việc thi cử</a></li>                            
+        <li<?php if (in_array($controller_name, array('homecontent', 'image', 'headerfooter', 'menu'))) echo ' class="active"'; ?>>
+            <a href="#">Cài đặt nội dung</a>
+            <ul>
+
+                <li><a href="<?php echo $this->basePath(); ?>/admin/homecontent">Nội dung trang chủ</a></li>                                
+                <li><a href="<?php echo $this->basePath(); ?>/admin/image">Logo và hình nền</a></li>
+                <li><a href="<?php echo $this->basePath(); ?>/admin/headerfooter">Phía trên và phía dưới</a></li>
+                <li><a href="<?php echo $this->basePath(); ?>/admin/menu">Menu</a></li>
+
+            </ul>
+
+        </li>
+        <li<?php if ($controller_name == 'guide') echo ' class="active"'; ?>><a href="<?php echo $this->basePath(); ?>/admin/guide">Hướng dẫn sử dụng</a></li>
+        <li<?php if ($controller_name == 'headerpdf') echo ' class="active"'; ?>><a href="<?php echo $this->basePath(); ?>/admin/headerpdf">Cài đặt nội dung file pdf</a></li>
+        <li<?php if ($controller_name == 'excel') echo ' class="active"'; ?>><a href="<?php echo $this->basePath(); ?>/admin/excel">excel</a></li>
+
+
+    </ul>
+</div>

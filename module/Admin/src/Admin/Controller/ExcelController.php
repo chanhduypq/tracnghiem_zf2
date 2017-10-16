@@ -31,19 +31,27 @@ class ExcelController extends AbstractActionController {
 
                 
 
-                $db->query('TRUNCATE TABLE nganh_nghe')->execute();
-                $db->query('TRUNCATE TABLE answer')->execute();
-                $db->query('TRUNCATE TABLE dap_an')->execute();
-                $db->query('TRUNCATE TABLE nganhnghe_question')->execute();
-                $db->query('TRUNCATE TABLE question')->execute();
+                $adapter = new \Zend\Db\Adapter\Adapter(array(
+                    'driver' => 'Mysqli',
+                    'database' => 'tracnghiem',
+                    'username' => 'root',
+                    'password' => ''
+                ));
+                $adapter->createStatement('TRUNCATE TABLE nganh_nghe')->execute();
+                $adapter->createStatement('TRUNCATE TABLE answer')->execute();
+                $adapter->createStatement('TRUNCATE TABLE dap_an')->execute();
+                $adapter->createStatement('TRUNCATE TABLE nganhnghe_question')->execute();
+                $adapter->createStatement('TRUNCATE TABLE question')->execute();
+                
 
                 $this->importExcel('excel/' . $item);
                 @unlink($path);
             }
-            Core::message()->addSuccess('Lưu thành công');
+            $session = new \Zend\Session\Container('base');$session->offsetSet('message', 'Lưu thành công');
         }
 
-        $this->_helper->redirector('index', 'excel', 'admin');
+        return $this->redirect()->toUrl('/admin/excel'); 
+
     }
 
     private function importExcel($file_name) {

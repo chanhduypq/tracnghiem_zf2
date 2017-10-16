@@ -44,8 +44,9 @@ class NganhngheController extends AbstractActionController
                         }
                     }
 
-                    Core::message()->addSuccess('Thêm mới thành công');
-                    $this->_helper->redirector('index', 'nganhnghe', 'admin');
+                    $session = new \Zend\Session\Container('base');$session->offsetSet('message', 'Thêm mới thành công');
+                    
+                    return $this->redirect()->toUrl('/admin/nganhnghe'); 
                 } else {
                     $this->view->message = 'Lỗi. Xử lý thất bại.';
                     $form->populate($formData);
@@ -96,8 +97,9 @@ class NganhngheController extends AbstractActionController
                     }
                 }
 
-                Core::message()->addSuccess('Sửa thành công');
-                $this->_helper->redirector('index', 'nganhnghe', 'admin');
+                $session = new \Zend\Session\Container('base');$session->offsetSet('message', 'Sửa thành công');
+                
+                return $this->redirect()->toUrl('/admin/nganhnghe'); 
             } else {
                 $form->populate($formData);
             }

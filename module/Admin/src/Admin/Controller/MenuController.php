@@ -21,8 +21,9 @@ class MenuController extends AbstractActionController
                 );
                 $mapper->save($data, "id=" . $id_array[$i]);
             }
-            Core::message()->addSuccess('Lưu thành công');
-            $this->_helper->redirector('index', 'menu', 'admin');
+            $session = new \Zend\Session\Container('base');$session->offsetSet('message', 'Lưu thành công');
+            
+            return $this->redirect()->toUrl('/admin/menu'); 
         }
         
         $this->view->data = $mapper->getData();

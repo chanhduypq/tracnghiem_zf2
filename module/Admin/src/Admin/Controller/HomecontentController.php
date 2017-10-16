@@ -27,11 +27,11 @@ class HomecontentController extends AbstractActionController
         $item = new \Admin\Model\HomecontentMapper();
         $result = $item->save($data);
         if ($result == true) {
-            Core::message()->addSuccess('Lưu thành công');
+            $session = new \Zend\Session\Container('base');$session->offsetSet('message', 'Lưu thành công');
         } else {
             Core::message()->addSuccess('Bị lỗi. Gọi điện cho Tuệ');
         }
-        $this->_helper->redirector('index', 'homecontent', 'admin');
+        return $this->redirect()->toUrl('/admin/homecontent'); 
     }
 
 }

@@ -45,8 +45,9 @@ class QuestionController extends AbstractActionController
                     }
 
 
-                    Core::message()->addSuccess('Thêm mới thành công');
-                    $this->_helper->redirector('index', 'question', 'admin',array('page'=> $this->params()->fromQuery('page')));
+                    $session = new \Zend\Session\Container('base');$session->offsetSet('message', 'Thêm mới thành công');
+                    
+                    return $this->redirect()->toUrl('/admin/question/?page='.$this->params()->fromQuery('page')); 
                 } else {
                     $this->view->message = 'Lỗi. Xử lý thất bại.';
                     $form->populate($formData);
@@ -77,8 +78,8 @@ class QuestionController extends AbstractActionController
                 $formData['sign'] = strtoupper($formData['sign']);
 
                 if ($mapper->createRow($formData)->save()) {
-                    Core::message()->addSuccess('Thêm mới thành công');
-                    $this->_helper->redirector('index', 'question', 'admin',array('page'=> $this->params()->fromQuery('page')));
+                    $session = new \Zend\Session\Container('base');$session->offsetSet('message', 'Thêm mới thành công');
+                    return $this->redirect()->toUrl('/admin/question/?page='.$this->params()->fromQuery('page')); 
                 } else {
                     $this->view->message = 'Lỗi. Xử lý thất bại.';
                     $form->populate($formData);
@@ -144,8 +145,8 @@ class QuestionController extends AbstractActionController
                     }
                 }
 
-                Core::message()->addSuccess('Sửa thành công');
-                $this->_helper->redirector('index', 'question', 'admin',array('page'=> $this->params()->fromQuery('page')));
+                $session = new \Zend\Session\Container('base');$session->offsetSet('message', 'Sửa thành công');
+                return $this->redirect()->toUrl('/admin/question/?page='.$this->params()->fromQuery('page')); 
             } else {
                 $form->populate($formData);
                 if ($dap_an != NULL) {
@@ -186,8 +187,8 @@ class QuestionController extends AbstractActionController
 
                 $formData['sign'] = strtoupper($formData['sign']);
                 $mapper->update($formData, 'id=' . $formData['id']);
-                Core::message()->addSuccess('Sửa thành công');
-                $this->_helper->redirector('index', 'question', 'admin',array('page'=> $this->params()->fromQuery('page')));
+                $session = new \Zend\Session\Container('base');$session->offsetSet('message', 'Sửa thành công');
+                return $this->redirect()->toUrl('/admin/question/?page='.$this->params()->fromQuery('page')); 
             } else {
                 $form->populate($formData);
             }
@@ -201,13 +202,12 @@ class QuestionController extends AbstractActionController
 
     public function deleteAction() 
     {
-        $answer_id = $this->_request->getParam('answer_id', null);
-        $question_id = $this->_request->getParam('question_id', null);
+        $answer_id = $this->params()->fromQuery('answer_id', null);
+        $question_id = $this->params()->fromQuery('question_id', null);
 
         
         if (\Zend\Common\Numeric::isInteger($answer_id) == FALSE && \Zend\Common\Numeric::isInteger($question_id) == FALSE) {
-            $this->_helper->redirector('index', 'question', 'admin');
-            return;
+            return $this->redirect()->toUrl('/admin/question'); 
         }
 
         if (\Zend\Common\Numeric::isInteger($question_id)) {
@@ -231,8 +231,8 @@ class QuestionController extends AbstractActionController
             $answers = $mapper->fetchAll('question_id=' . $row['question_id']);
         }
 
-        Core::message()->addSuccess('Xóa thành công');
-        $this->_helper->redirector('index', 'question', 'admin');
+        $session = new \Zend\Session\Container('base');$session->offsetSet('message', 'Xóa thành công');
+        return $this->redirect()->toUrl('/admin/question'); 
     }
 
 }

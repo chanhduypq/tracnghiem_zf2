@@ -11,18 +11,35 @@ class ExamController extends AbstractActionController
     public function indexAction() 
     {
         
-        $data = $this->_request->getPost();
+        $data = $this->params()->fromPost();
         $error_config_exam = '';
         $message= $this->getMessage();
+        
         if (count($data) > 0) {
             if (ctype_digit($data['phut']) && ctype_digit($data['number'])) {
                 $this->saveDB($data);
-                Core::message()->addSuccess('Lưu thành công');
-                $this->_helper->redirector('index', 'exam', 'admin');                                
+                $session = new \Zend\Session\Container('base');$session->offsetSet('message', 'Lưu thành công');
+                return $this->redirect()->toUrl('/admin/exam'); 
             }
             else{
-                $row_config_exam = $db->fetchRow('select * from config_exam');
-                $row_exam_time = $db->fetchRow("select sh,sm,eh,em,DATE_FORMAT(date,'%d/%m/%Y') AS date from exam_time");
+                
+                
+        
+                
+                $model = new \Application\Model\Table('config_exam');
+                $row_config_exam = $model->first();
+                $select = new \Zend\Db\Sql\Select();
+                $select->columns(array(
+                            "sh" => "sh",
+                            "sm" => "sm",
+                            "eh" => "eh",
+                            "em" => "em",
+                            "date" => new \Zend\Db\Sql\Expression("DATE_FORMAT(date,'%d/%m/%Y')")
+                        ))
+                        ->from("exam_time")                        
+                        ;
+                $row_exam_time = $model->selectWith($select)->toArray();
+                $row_exam_time=$row_exam_time[0];
                 
                 $row_config_exam['phut'] = $data['phut'];
                 $row_config_exam['number'] = $data['number'];
@@ -41,26 +58,54 @@ class ExamController extends AbstractActionController
             
             
         } else {
-            $row_config_exam = $db->fetchRow('select * from config_exam');
-            $row_exam_time = $db->fetchRow("select sh,sm,eh,em,DATE_FORMAT(date,'%d/%m/%Y') AS date from exam_time");
+            
+            $model = new \Application\Model\Table('config_exam');
+            $row_config_exam = $model->first();
+            
+            $select = new \Zend\Db\Sql\Select();
+            $select->columns(array(
+                        "sh" => "sh",
+                        "sm" => "sm",
+                        "eh" => "eh",
+                        "em" => "em",
+                        "date" => new \Zend\Db\Sql\Expression("DATE_FORMAT(date,'%d/%m/%Y')")
+                    ))
+                    ->from("exam_time")                        
+                    ;
+           
+            $row_exam_time = $model->selectWith($select)->toArray();
+            $row_exam_time=$row_exam_time[0];
             
             $dateForRender = $row_exam_time['date'];
+             
         }
+        $model = new \Application\Model\Table('config_exam');
+        $select = new \Zend\Db\Sql\Select();
+        $select->columns(array(
+                    "exam_date" => new \Zend\Db\Sql\Expression("DATE_FORMAT(exam_date,'%Y-%m-%d')")
+                ))
+                ->from("user_exam")
+                ->order("exam_date DESC")
+                ->limit(1)
+                ;
         
-        $row = $db->fetchRow("select DATE_FORMAT(exam_date,'%Y-%m-%d') AS exam_date from user_exam ORDER BY exam_date DESC LIMIT 1");
+        $row = $model->selectWith($select)->toArray();
+        $row=$row[0];
+        $params=array();
         if (is_array($row) && count($row) > 0) {            
             $exam_date = new \DateTime($row['exam_date']);
-            $exam_date->add(new DateInterval('P1D'));
-            $this->view->minDate=$exam_date->format('d/m/Y');
+            $exam_date->add(new \DateInterval('P1D'));
+            $params['minDate']=$exam_date->format('d/m/Y');
         }
 
-        $this->view->row_exam_time = $row_exam_time;
-        $this->view->row_config_exam = $row_config_exam;
-        $this->view->message = $message;
-        $this->view->error_config_exam = $error_config_exam;
-        $this->view->date = $dateForRender;
+        $params['row_exam_time'] = $row_exam_time;
+        $params['row_config_exam'] = $row_config_exam;
+        $params['message'] = $message;
+        $params['error_config_exam'] = $error_config_exam;
+        $params['date'] = $dateForRender;
         $levelModel = new \Application\Model\Configexamlevel();
-        $this->view->levels = $levelModel->getConfigExamLevels();
+        $params['levels'] = $levelModel->getConfigExamLevels();
+        return new ViewModel($params);
     }
 
     private function saveDB($data) 
@@ -75,13 +120,17 @@ class ExamController extends AbstractActionController
             $eh = $temp[0];
             $em = $temp[1];
 
-            
+            $adapter = new \Zend\Db\Adapter\Adapter(array(
+                'driver' => 'Mysqli',
+                'database' => 'tracnghiem',
+                'username' => 'root',
+                'password' => ''
+            ));
+            $adapter->createStatement("update exam_time set `date`='" . $data['date'] . "',sh=" . $data['sh'] . ",sm=" . $data['sm'] . ",eh=$eh,em=$em")->execute();
+            $adapter->createStatement("update config_exam set phan_tram=" . $data['phan_tram'] . ",phut=" . $data['phut'] . ",number=" . $data['number'])->execute();
+            $adapter->createStatement("update user_exam set allow_re_exam=0")->execute();
 
-            $db->query("update exam_time set `date`='" . $data['date'] . "',sh=" . $data['sh'] . ",sm=" . $data['sm'] . ",eh=$eh,em=$em")->execute();
-
-            $db->query("update config_exam set phan_tram=" . $data['phan_tram'] . ",phut=" . $data['phut'] . ",number=" . $data['number'])->execute();
-
-            $db->query("update user_exam set allow_re_exam=0")->execute();
+         
             
             $levelIds = $data['level_id'];
             $b1 = $data['b1'];
