@@ -64,31 +64,32 @@ class IndexController extends AbstractActionController
     public function logoutAction() 
     {
         $session = new \Zend\Session\Container('base');
-        $auth->clearIdentity();
+        $session->offsetUnset('user');
         return $this->redirect()->toUrl('/admin/index'); 
         
     }
 
     public function changepasswordAction() 
     {
-        $this->disableLayout();
+        
     }
 
     public function ajaxchangepasswordAction() 
     {
-        $this->disableLayout();
+        
         $oldPassword = $this->getRequest()->getPost('oldPassword');
         $session = new \Zend\Session\Container('base');
         $identity = $session->offsetGet('user');
 
         if ($identity['password'] != sha1($oldPassword)) {
             echo 'error';
-            return;
+            return $this->getResponse();
         }
         $newPassword = $this->getRequest()->getPost('newPassword');
         $index = new \Admin\Model\IndexMapper();
         $index->changePassword($identity['email'], $newPassword);
         echo "";
+        return $this->getResponse();
     }
 
 }

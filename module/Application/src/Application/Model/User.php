@@ -29,7 +29,7 @@ class User extends AbstractTableGateway
         $items = $this->selectWith($select)->toArray();
 
         $select = new \Zend\Db\Sql\Select();
-        $select->columns(array('num' => new \Zend\Db\Sql\Expression('COUNT(*)')))->from('user')->where('is_admin is null OR is_admin=0');
+        $select->columns(array('num' => new \Zend\Db\Sql\Expression('COUNT(*)')),FALSE)->from('user')->where('is_admin is null OR is_admin=0');
         $total = $this->selectWith($select)->toArray();
         $total = $total[0]['num'];
 

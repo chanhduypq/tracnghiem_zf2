@@ -47,7 +47,8 @@ class Userexam extends AbstractTableGateway {
                 ->where("user_exam.id=$user_exam_id")
                 ->order("user_exam_detail.id ASC")
                 ;
-        $row = $this->selectWith($select)->toArray();
+        $model = new \Application\Model\Table('');
+        $row = $model->selectWith($select)->toArray();
         
         $count_correct = 0;
         $count_incorrect = 0;

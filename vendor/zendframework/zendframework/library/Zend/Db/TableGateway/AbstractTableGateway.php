@@ -93,12 +93,7 @@ abstract class AbstractTableGateway implements TableGatewayInterface
         }
         
 //        tuetc
-        $adapter = new Adapter(array(
-            'driver' => 'Mysqli',
-            'database' => 'tracnghiem',
-            'username' => 'root',
-            'password' => ''
-        ));
+        $adapter = new Adapter();
         $adapter->createStatement('SET NAMES \'UTF8\'')->execute();
         $this->adapter = $adapter;
 

@@ -31,12 +31,7 @@ class ExcelController extends AbstractActionController {
 
                 
 
-                $adapter = new \Zend\Db\Adapter\Adapter(array(
-                    'driver' => 'Mysqli',
-                    'database' => 'tracnghiem',
-                    'username' => 'root',
-                    'password' => ''
-                ));
+                $adapter = new \Zend\Db\Adapter\Adapter();
                 $adapter->createStatement('TRUNCATE TABLE nganh_nghe')->execute();
                 $adapter->createStatement('TRUNCATE TABLE answer')->execute();
                 $adapter->createStatement('TRUNCATE TABLE dap_an')->execute();

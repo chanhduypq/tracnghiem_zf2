@@ -34,7 +34,7 @@ class Question extends AbstractTableGateway {
         $items = $this->selectWith($select)->toArray();
 
         $select = new \Zend\Db\Sql\Select();
-        $select->columns(array('num' => new \Zend\Db\Sql\Expression('COUNT(*)')))->from('question');
+        $select->columns(array('num' => new \Zend\Db\Sql\Expression('COUNT(*)')),FALSE)->from('question');
         $total = $this->selectWith($select)->toArray();
         $total = $total[0]['num'];
 
@@ -61,19 +61,14 @@ class Question extends AbstractTableGateway {
      * @return array
      */
     public static function getFullQuestions($db, $questionIds) {
+        $model = new \Application\Model\Table('');
         $select = new \Zend\Db\Sql\Select();
-        $select->columns(array(
-                    "question_content" => "question.content",
-                    "answer_content" => "answer.content",
-                    "dap_an_sign" => "dap_an.sign",
-                    "answer_sign" => "answer.sign",
-                    "id" => "question.id"
-                ))
-                ->from("question")
-                ->join("answer", "question.id=answer.question_id")
-                ->join("dap_an", "dap_an.question_id=question.id")
+        $select
+                ->from("question",array("question_content" => "content"))
+                ->join("answer", "question.id=answer.question_id",array("answer_content" => "content","answer_sign" => "sign"))
+                ->join("dap_an", "dap_an.question_id=answer.question_id",array("dap_an_sign" => "sign"))
                 ->where("question.id IN (" . implode(',', $questionIds) . ")");
-        $questions = $this->selectWith($select)->toArray();
+        $questions = $model->selectWith($select)->toArray();
 
         $returnQuestions = array();
         foreach ($questions as $question) {
@@ -95,62 +90,63 @@ class Question extends AbstractTableGateway {
     }
 
     public static function getQuestionIdsByLevelAndNganhNgheId($nganhNgheId, $level, $config_exam_number) {
+        $model = new \Application\Model\Table('');
         if ($level == '1') {//nếu là bậc 1
             $select = new \Zend\Db\Sql\Select();
-            $select->columns(array("id" => "question.id"))
-                    ->from("nganhnghe_question")
-                    ->join("question", "question.id=nganhnghe_question.question_id")
+            $select
+                    ->columns(array("id" => "question_id"),FALSE)->from("nganhnghe_question")
+                    ->join("question", "question.id=nganhnghe_question.question_id",array())
                     ->where("nganhnghe_question.nganhnghe_id=$nganhNgheId AND question.level=1")
-                    ->order("RAND()")
+                    ->order(new \Zend\Db\Sql\Expression('RAND()'))
                     ->limit($config_exam_number)
                     ->quantifier('DISTINCT')
             ;
-            $rows = $this->selectWith($select)->toArray();
+            $rows = $model->selectWith($select)->toArray();
         } else if ($level == '2' || $level == '3') {//nếu là bậc 2/3
-            $select->columns(array("data" => "data"))
+            $select->columns(array("data" => "data"),FALSE)
                     ->from("config_exam_level")
                     ->where("level=$level")
             ;
-            $rows = $this->selectWith($select)->toArray();
+            $rows = $model->selectWith($select)->toArray();
             $levelJsonString = $rows[0]['data'];
             $levelJsonArray = json_decode(html_entity_decode($levelJsonString), true);
             if ($levelJsonArray['b2'] == '100') {//nếu hệ thống muốn lấy 100% câu b2 cho bậc 2/3
                 $select = new \Zend\Db\Sql\Select();
-                $select->columns(array("id" => "question.id"))
-                        ->from("nganhnghe_question")
-                        ->join("question", "question.id=nganhnghe_question.question_id")
+                $select
+                         ->columns(array("id" => "question_id"),FALSE)->from("nganhnghe_question")
+                        ->join("question", "question.id=nganhnghe_question.question_id",array())
                         ->where("nganhnghe_question.nganhnghe_id=$nganhNgheId AND question.level=2")
-                        ->order("RAND()")
+                        ->order(new \Zend\Db\Sql\Expression('RAND()'))
                         ->limit($config_exam_number)
                         ->quantifier('DISTINCT')
                 ;
-                $rows = $this->selectWith($select)->toArray();
+                $rows = $model->selectWith($select)->toArray();
                 if (count($rows) < $config_exam_number) {//nếu lấy chưa đủ thi phải lấy thêm b1 bù vào cho đủ $config_exam_number
                     $number = $config_exam_number - count($rows);
                     $select = new \Zend\Db\Sql\Select();
-                    $select->columns(array("id" => "question.id"))
-                            ->from("nganhnghe_question")
-                            ->join("question", "question.id=nganhnghe_question.question_id")
+                    $select
+                            ->columns(array("id" => "question_id"),FALSE)->from("nganhnghe_question")
+                            ->join("question", "question.id=nganhnghe_question.question_id",array())
                             ->where("nganhnghe_question.nganhnghe_id=$nganhNgheId AND question.level=1")
-                            ->order("RAND()")
+                            ->order(new \Zend\Db\Sql\Expression('RAND()'))
                             ->limit($number)
                             ->quantifier('DISTINCT')
                     ;
-                    $rows = array_merge($rows, $this->selectWith($select)->toArray());
+                    $rows = array_merge($rows, $model->selectWith($select)->toArray());
                 }
             } else {
                 $b2Number = intval($config_exam_number * $levelJsonArray['b2'] / 100);
 
                 $select = new \Zend\Db\Sql\Select();
-                $select->columns(array("id" => "question.id"))
-                        ->from("nganhnghe_question")
-                        ->join("question", "question.id=nganhnghe_question.question_id")
+                $select
+                        ->columns(array("id" => "question_id"),FALSE)->from("nganhnghe_question")
+                        ->join("question", "question.id=nganhnghe_question.question_id",array())
                         ->where("nganhnghe_question.nganhnghe_id=$nganhNgheId AND question.level=2")
-                        ->order("RAND()")
+                        ->order(new \Zend\Db\Sql\Expression('RAND()'))
                         ->limit($b2Number)
                         ->quantifier('DISTINCT')
                 ;
-                $rows = $this->selectWith($select)->toArray();
+                $rows = $model->selectWith($select)->toArray();
 
                 if ($b2Number > count($rows)) {//nếu trong db chỉ có 50 câu b2 mà config lại muốn lấy 60 câu b2
                     $b1Number = $config_exam_number - count($rows);
@@ -159,75 +155,77 @@ class Question extends AbstractTableGateway {
                 }
 
                 $select = new \Zend\Db\Sql\Select();
-                $select->columns(array("id" => "question.id"))
-                        ->from("nganhnghe_question")
-                        ->join("question", "question.id=nganhnghe_question.question_id")
+                $select
+                         ->columns(array("id" => "question_id"),FALSE)->from("nganhnghe_question")
+                        ->join("question", "question.id=nganhnghe_question.question_id",array())
                         ->where("nganhnghe_question.nganhnghe_id=$nganhNgheId AND question.level=1")
-                        ->order("RAND()")
+                        ->order(new \Zend\Db\Sql\Expression('RAND()'))
                         ->limit($b1Number)
                         ->quantifier('DISTINCT')
                 ;
-                $rows = array_merge($rows, $this->selectWith($select)->toArray());
+                $rows = array_merge($rows, $model->selectWith($select)->toArray());
             }
         } else {//nếu là bậc 4/5
-            $select->columns(array("data" => "data"))
+            $select = new \Zend\Db\Sql\Select();
+            $select->columns(array("data" => "data"),FALSE)
                     ->from("config_exam_level")
                     ->where("level=$level")
             ;
-            $rows = $this->selectWith($select)->toArray();
+            
+            $rows = $model->selectWith($select)->toArray();
             $levelJsonString = $rows[0]['data'];
             $levelJsonArray = json_decode(html_entity_decode($levelJsonString), true);
 
             if ($levelJsonArray['b3'] == '100') {//nếu hệ thống muốn lấy 100% câu b3 cho bậc 4/5
                 $select = new \Zend\Db\Sql\Select();
-                $select->columns(array("id" => "question.id"))
-                        ->from("nganhnghe_question")
-                        ->join("question", "question.id=nganhnghe_question.question_id")
+                $select
+                         ->columns(array("id" => "question_id"),FALSE)->from("nganhnghe_question")
+                        ->join("question", "question.id=nganhnghe_question.question_id",array())
                         ->where("nganhnghe_question.nganhnghe_id=$nganhNgheId AND question.level=3")
-                        ->order("RAND()")
+                        ->order(new \Zend\Db\Sql\Expression('RAND()'))
                         ->limit($b2Number)
                         ->quantifier('DISTINCT')
                 ;
-                $rows = $this->selectWith($select)->toArray();
+                $rows = $model->selectWith($select)->toArray();
                 if (count($rows) < $config_exam_number) {//nếu lấy chưa đủ thi phải lấy thêm b1,b2 bù vào cho đủ $config_exam_number
                     $number = $config_exam_number - count($rows);
 
                     $select = new \Zend\Db\Sql\Select();
-                    $select->columns(array("id" => "question.id"))
-                            ->from("nganhnghe_question")
-                            ->join("question", "question.id=nganhnghe_question.question_id")
+                    $select
+                             ->columns(array("id" => "question_id"),FALSE)->from("nganhnghe_question")
+                            ->join("question", "question.id=nganhnghe_question.question_id",array())
                             ->where("nganhnghe_question.nganhnghe_id=$nganhNgheId AND question.level<=2")
-                            ->order("RAND()")
+                            ->order(new \Zend\Db\Sql\Expression('RAND()'))
                             ->limit($number)
                             ->quantifier('DISTINCT')
                     ;
-                    $rows = array_merge($rows, $this->selectWith($select)->toArray());
+                    $rows = array_merge($rows, $model->selectWith($select)->toArray());
                 }
             } else {
                 $b3Number = intval($config_exam_number * $levelJsonArray['b3'] / 100);
                 $select = new \Zend\Db\Sql\Select();
-                $select->columns(array("id" => "question.id"))
-                        ->from("nganhnghe_question")
-                        ->join("question", "question.id=nganhnghe_question.question_id")
+                $select
+                         ->columns(array("id" => "question_id"),FALSE)->from("nganhnghe_question")
+                        ->join("question", "question.id=nganhnghe_question.question_id",array())
                         ->where("nganhnghe_question.nganhnghe_id=$nganhNgheId AND question.level=3")
-                        ->order("RAND()")
+                        ->order(new \Zend\Db\Sql\Expression('RAND()'))
                         ->limit($b3Number)
                         ->quantifier('DISTINCT')
                 ;
-                $rows = $this->selectWith($select)->toArray();
+                $rows = $model->selectWith($select)->toArray();
 
                 $b2Number = intval($config_exam_number * $levelJsonArray['b2'] / 100);
 
                 $select = new \Zend\Db\Sql\Select();
-                $select->columns(array("id" => "question.id"))
-                        ->from("nganhnghe_question")
-                        ->join("question", "question.id=nganhnghe_question.question_id")
+                $select
+                         ->columns(array("id" => "question_id"),FALSE)->from("nganhnghe_question")
+                        ->join("question", "question.id=nganhnghe_question.question_id",array())
                         ->where("nganhnghe_question.nganhnghe_id=$nganhNgheId AND question.level=2")
-                        ->order("RAND()")
+                        ->order(new \Zend\Db\Sql\Expression('RAND()'))
                         ->limit($b2Number)
                         ->quantifier('DISTINCT')
                 ;
-                $rows = array_merge($rows, $this->selectWith($select)->toArray());
+                $rows = array_merge($rows, $model->selectWith($select)->toArray());
 
                 if ($b2Number + $b3Number > count($rows)) {//nếu trong db chỉ có 50 câu b2,b3 mà config lại muốn lấy 60 câu b2,b3
                     $b1Number = $config_exam_number - count($rows);
@@ -236,15 +234,15 @@ class Question extends AbstractTableGateway {
                 }
 
                 $select = new \Zend\Db\Sql\Select();
-                $select->columns(array("id" => "question.id"))
-                        ->from("nganhnghe_question")
-                        ->join("question", "question.id=nganhnghe_question.question_id")
+                $select
+                         ->columns(array("id" => "question_id"),FALSE)->from("nganhnghe_question")
+                        ->join("question", "question.id=nganhnghe_question.question_id",array())
                         ->where("nganhnghe_question.nganhnghe_id=$nganhNgheId AND question.level=1")
-                        ->order("RAND()")
+                        ->order(new \Zend\Db\Sql\Expression('RAND()'))
                         ->limit($b1Number)
                         ->quantifier('DISTINCT')
                 ;
-                $rows = array_merge($rows, $this->selectWith($select)->toArray());
+                $rows = array_merge($rows, $model->selectWith($select)->toArray());
 
                 if (count($rows) < $config_exam_number) {
                     $tempIds = array();
@@ -253,15 +251,15 @@ class Question extends AbstractTableGateway {
                     }
                     if (count($tempIds) > 0) {
                         $select = new \Zend\Db\Sql\Select();
-                        $select->columns(array("id" => "question.id"))
-                                ->from("nganhnghe_question")
-                                ->join("question", "question.id=nganhnghe_question.question_id")
+                        $select
+                                 ->columns(array("id" => "question_id"),FALSE)->from("nganhnghe_question")
+                                ->join("question", "question.id=nganhnghe_question.question_id",array())
                                 ->where("nganhnghe_question.nganhnghe_id=$nganhNgheId AND question.level<=3 AND question.id NOT IN (" . implode(",", $tempIds) . ")")
-                                ->order("RAND()")
+                                ->order(new \Zend\Db\Sql\Expression('RAND()'))
                                 ->limit($config_exam_number - count($rows))
                                 ->quantifier('DISTINCT')
                         ;
-                        $rows = array_merge($rows, $this->selectWith($select)->toArray());
+                        $rows = array_merge($rows, $model->selectWith($select)->toArray());
                     }
                 }
             }
@@ -284,15 +282,19 @@ class Question extends AbstractTableGateway {
             $level = '3';
         }
 
+        $model = new \Application\Model\Table('');
+        
         $select = new \Zend\Db\Sql\Select();
-        $select->columns(array("id" => "question.id"))
-                ->from("nganhnghe_question")
-                ->join("question", "question.id=nganhnghe_question.question_id")
+        $select->columns(array("id" => "question_id"),FALSE)->from("nganhnghe_question")
+                ->join("question", "question.id=nganhnghe_question.question_id",array())
                 ->where("nganhnghe_question.nganhnghe_id=$nganhNgheId AND question.level<=$level")
                 ->order("question.id ASC")
                 ->quantifier('DISTINCT')
         ;
-        $rows = $this->selectWith($select)->toArray();
+
+        
+        $rows = $model->selectWith($select)->toArray();
+        
         $questionIds = array();
         foreach ($rows as $row) {
             $questionIds[] = $row['id'];
@@ -307,25 +309,17 @@ class Question extends AbstractTableGateway {
         }
         $newQuestions = array();
 
+        $model = new \Application\Model\Table('');
         $select = new \Zend\Db\Sql\Select();
-        $select->columns(array(
-                    "id" => "question.id",
-                    "is_dao" => "question.is_dao",
-                    "content" => "question.content",
-                    "sign" => "answer.sign",
-                    "answer_content" => "answer.content",
-                    "answer_id" => "answer.id",
-                    "dapan_sign" => "dap_an.sign"
-                        )
-                )
-                ->from("question")
-                ->join("nganhnghe_question", "question.id = nganhnghe_question.question_id")
-                ->join("answer", "answer.question_id=question.id")
-                ->join("dap_an", "dap_an.question_id=question.id")
+        $select
+                ->from("question",array('is_dao', 'content'))
+                ->join("nganhnghe_question", "question.id = nganhnghe_question.question_id",array('id'=> 'question_id'))
+                ->join("answer", "answer.question_id=nganhnghe_question.question_id",array('answer_id'=> 'id','sign'=> 'sign','answer_content'=> 'content'))
+                ->join("dap_an", "dap_an.question_id=nganhnghe_question.question_id",array('dapan_sign'=> 'sign'))
                 ->where("question.id IN (" . implode(',', $questionIds) . ")")
                 ->order("question.id ASC,answer.sign ASC")
         ;
-        $questions = $this->selectWith($select)->toArray();
+        $questions = $model->selectWith($select)->toArray();
 
         foreach ($questions as $question) {
             $newQuestions[$question['id']]['id'] = $question['id'];

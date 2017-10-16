@@ -123,16 +123,15 @@
         function subLogin() {
             if (!validateLogin())
                 return;
-<?php echo 'url="' . $this->basePath('/application/index/login') . '";'; ?>
+<?php echo 'url="' . $this->basePath('/application_index/login') . '";'; ?>
             jQuery.post(url, {'username': jQuery('input#username').val(), 'password': jQuery('input#password1').val()}, function (resp) {
-
-                if (resp == '') {
+                if ($.trim(resp) == '') {
                     if (type == 0) {
                         window.location.reload();
                     } else if (type == 1) {
-                        window.location = '<?php echo $this->basePath("/application/thi"); ?>';
+                        window.location = '<?php echo $this->basePath("/application_thi"); ?>';
                     } else if (type == 2) {
-                        window.location = '<?php echo $this->basePath("/application/review"); ?>';
+                        window.location = '<?php echo $this->basePath("/application_review"); ?>';
                     }
 
 

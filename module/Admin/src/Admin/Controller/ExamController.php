@@ -35,7 +35,7 @@ class ExamController extends AbstractActionController
                             "eh" => "eh",
                             "em" => "em",
                             "date" => new \Zend\Db\Sql\Expression("DATE_FORMAT(date,'%d/%m/%Y')")
-                        ))
+                        ),FALSE)
                         ->from("exam_time")                        
                         ;
                 $row_exam_time = $model->selectWith($select)->toArray();
@@ -69,7 +69,7 @@ class ExamController extends AbstractActionController
                         "eh" => "eh",
                         "em" => "em",
                         "date" => new \Zend\Db\Sql\Expression("DATE_FORMAT(date,'%d/%m/%Y')")
-                    ))
+                    ),FALSE)
                     ->from("exam_time")                        
                     ;
            
@@ -83,7 +83,7 @@ class ExamController extends AbstractActionController
         $select = new \Zend\Db\Sql\Select();
         $select->columns(array(
                     "exam_date" => new \Zend\Db\Sql\Expression("DATE_FORMAT(exam_date,'%Y-%m-%d')")
-                ))
+                ),FALSE)
                 ->from("user_exam")
                 ->order("exam_date DESC")
                 ->limit(1)
@@ -120,12 +120,7 @@ class ExamController extends AbstractActionController
             $eh = $temp[0];
             $em = $temp[1];
 
-            $adapter = new \Zend\Db\Adapter\Adapter(array(
-                'driver' => 'Mysqli',
-                'database' => 'tracnghiem',
-                'username' => 'root',
-                'password' => ''
-            ));
+            $adapter = new \Zend\Db\Adapter\Adapter();
             $adapter->createStatement("update exam_time set `date`='" . $data['date'] . "',sh=" . $data['sh'] . ",sm=" . $data['sm'] . ",eh=$eh,em=$em")->execute();
             $adapter->createStatement("update config_exam set phan_tram=" . $data['phan_tram'] . ",phut=" . $data['phut'] . ",number=" . $data['number'])->execute();
             $adapter->createStatement("update user_exam set allow_re_exam=0")->execute();

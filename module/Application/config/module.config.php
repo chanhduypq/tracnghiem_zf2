@@ -24,12 +24,72 @@ return array(
 //                     ),
 //                 ),
 //             ),
-            'home' => array(
+            'application_index' => array(
                 'type' => 'Zend\Mvc\Router\Http\Literal',
                 'options' => array(
-                    'route'    => '/',
+                    'route'    => '/application_index',
                     'defaults' => array(
                         'controller' => 'Application\Controller\Index',
+                        'action'     => 'index',
+                    ),
+                ),
+            ),
+            'application_guide' => array(
+                'type' => 'Zend\Mvc\Router\Http\Literal',
+                'options' => array(
+                    'route'    => '/application_guide',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Index',
+                        'action'     => 'guide',
+                    ),
+                ),
+            ),
+            'application_login' => array(
+                'type' => 'Zend\Mvc\Router\Http\Literal',
+                'options' => array(
+                    'route'    => '/application_index/login',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Index',
+                        'action'     => 'login',
+                    ),
+                ),
+            ),
+            'application_logout' => array(
+                'type' => 'Zend\Mvc\Router\Http\Literal',
+                'options' => array(
+                    'route'    => '/application_index/logout',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Index',
+                        'action'     => 'logout',
+                    ),
+                ),
+            ),
+            'application_thi' => array(
+                'type' => 'Zend\Mvc\Router\Http\Literal',
+                'options' => array(
+                    'route'    => '/application_thi',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Thi',
+                        'action'     => 'index',
+                    ),
+                ),
+            ),
+            'application_review' => array(
+                'type' => 'Zend\Mvc\Router\Http\Literal',
+                'options' => array(
+                    'route'    => '/application_review',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Review',
+                        'action'     => 'index',
+                    ),
+                ),
+            ),
+            'application_question' => array(
+                'type' => 'Zend\Mvc\Router\Http\Literal',
+                'options' => array(
+                    'route'    => '/application_question',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Question',
                         'action'     => 'index',
                     ),
                 ),

@@ -30,6 +30,7 @@ class IndexController extends AbstractActionController {
     }
 
     public function loginAction() {
+        $this->layout('layout/null');
         $username = $this->getRequest()->getPost('username', null);
         $password = $this->getRequest()->getPost('password', null);
         $model = new \Application\Model\Table('user');
@@ -47,7 +48,7 @@ class IndexController extends AbstractActionController {
     public function logoutAction() {
         $session = new Container('base');
         $session->offsetUnset('user');
-        return $this->redirect()->toUrl('/');   
+        return $this->redirect()->toUrl('/application_index');   
     }
 
     public function logoutajaxAction() {

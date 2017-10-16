@@ -13,6 +13,20 @@ class UserController extends AbstractActionController {
 //    }
 
     public function indexAction() {
+
+        $params= array();
+//        $paginator=new \Zend\Paginator\Paginator(new \Zend\Paginator\Adapter\Null(0));
+//        $paginator->setDefaultScrollingStyle();
+//        $paginator->setDefaultScrollingStyle();
+//        $paginator->setItemCountPerPage($this->limit);
+//        $paginator->setCurrentPageNumber($this->page);
+//
+//        $params['paginator'] = $paginator;
+//        $params['limit'] = $this->limit;
+//        $params['total'] = $this->total;
+//        $params['page'] = $this->page;
+//        $params['message'] = $this->getMessage();
+     
         $this->model = new \Application\Model\User();
         $rows = $this->model->getUsers($this->total, $this->limit, $this->start);
         $params['items'] = $rows;
@@ -47,12 +61,7 @@ class UserController extends AbstractActionController {
         $exam_id = $this->params()->fromQuery('exam_id', null);
         
         
-        $adapter = new \Zend\Db\Adapter\Adapter(array(
-                    'driver' => 'Mysqli',
-                    'database' => 'tracnghiem',
-                    'username' => 'root',
-                    'password' => ''
-                ));
+        $adapter = new \Zend\Db\Adapter\Adapter();
         $adapter->createStatement('UPDATE user_exam SET allow_re_exam=1 WHERE id=' . $exam_id)->execute();
         return $this->redirect()->toUrl('/admin/user/edit/?id='.$user_id); 
     }
@@ -61,12 +70,7 @@ class UserController extends AbstractActionController {
         $user_id = $this->params()->fromQuery('user_id', null);
         $exam_id = $this->params()->fromQuery('exam_id', null);
         
-        $adapter = new \Zend\Db\Adapter\Adapter(array(
-                    'driver' => 'Mysqli',
-                    'database' => 'tracnghiem',
-                    'username' => 'root',
-                    'password' => ''
-                ));
+        $adapter = new \Zend\Db\Adapter\Adapter();
         $adapter->createStatement('UPDATE user_exam SET allow_re_exam=0 WHERE id=' . $exam_id)->execute();
         
         return $this->redirect()->toUrl('/admin/user/edit/?id='.$user_id); 

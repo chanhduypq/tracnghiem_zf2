@@ -4,8 +4,8 @@ $session = new Container('base');
 
 $menu_items = $GLOBALS['menu_items'];
 if ($session->offsetExists('user')) {
-    $hrefThi = $this->basePath('/application/thi');
-    $hrefReview = $this->basePath('/application/review');
+    $hrefThi = $this->basePath('/application_thi');
+    $hrefReview = $this->basePath('/application_review');
     $idReview = $idThi = '';
 } else {
     $hrefThi = $hrefReview = 'javascript:void(0)';
@@ -41,7 +41,7 @@ $controller = strtolower($temp[count($temp) - 1]);
                         <a href="#" style="color: black;"><?php echo $row['title']; ?></a>
                         <ul style="margin-left: 60px;background-color: white;">
                             <?php for ($i = 1; $i <= 5; $i++) { ?>
-                                <li><a href="<?php echo $this->basePath(); ?>/application/question/index/nganhNgheId/<?php echo $row['id']; ?>/level/<?php echo $i; ?>">Bậc <?php echo $i; ?></a></li>
+                                <li><a href="<?php echo $this->basePath(); ?>/application_question?nganhNgheId=<?php echo $row['id']; ?>&level=<?php echo $i; ?>">Bậc <?php echo $i; ?></a></li>
                                 <?php
                             }
                             ?>
@@ -53,6 +53,6 @@ $controller = strtolower($temp[count($temp) - 1]);
 
             </ul>
         </li>
-        <li><a href="<?php echo $this->basePath(); ?>/application/index/guide"><?php echo $menu_items[4]; ?></a></li>                        
+        <li><a href="<?php echo $this->basePath(); ?>/application_guide"><?php echo $menu_items[4]; ?></a></li>                        
     </ul>
 </div>

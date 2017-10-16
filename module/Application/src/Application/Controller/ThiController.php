@@ -36,9 +36,10 @@ class ThiController extends AbstractActionController
         Pdf::createFilePdf(Pdf::DOWNLOAD, $html, $date[0] . '_' . $date[1] . '_' . $date[2] . '.pdf', $title_header);
     }
 
-    public function index() 
+    public function indexAction() 
     {
 
+        $this->layout('layout/index');
         $this->param['i']=intval(date('i'));
         $this->param['h']=intval(date('H'));
         
@@ -306,21 +307,21 @@ class ThiController extends AbstractActionController
             $level = $identity['level'];
             $questionIds = $identity['questionIds'];
         } else {
-            $nganhNgheId = $request['nganh_nghe_id'] ? $request['nganh_nghe_id'] : 0;
-            $level = $request['level'] ? $request['level'] : 0;            
+            $nganhNgheId = $request['nganh_nghe_id'] ?? 0;
+            $level = $request['level'] ?? 1;            
             
             $model = new \Application\Model\Table('');
             $select = new \Zend\Db\Sql\Select();
             $select->from('config_exam');
             $config_exam = $model->selectWith($select)->toArray();
             $config_exam=$config_exam[0];
-            $questionIds = Question::getQuestionIdsByLevelAndNganhNgheId($nganhNgheId, $level, $config_exam['number']);
+            $questionIds = \Application\Model\Question::getQuestionIdsByLevelAndNganhNgheId($nganhNgheId, $level, $config_exam['number']);
         }
         
         $date = date('Y-m-d');
 
-        $h = $request['h'] ? $request['h'] : date('H');
-        $m = $request['i'] ? $request['i'] : date('i');
+        $h = $request['h'] ?? date('H');
+        $m = $request['i'] ?? date('i');
         
         $model = new \Application\Model\Table('');
         $select = new \Zend\Db\Sql\Select();
@@ -330,7 +331,7 @@ class ThiController extends AbstractActionController
             "sm"=>"sm",
             "eh"=>"eh",
             "em"=>"em"
-        ))->from('exam_time')->where("DATE(`date`)='$date' AND ($h>sh OR ($h=sh AND $m>=sm)) AND ($h < eh OR ($h=eh AND $m<=em))");
+        ),FALSE)->from('exam_time')->where("DATE(`date`)='$date' AND ($h>sh OR ($h=sh AND $m>=sm)) AND ($h < eh OR ($h=eh AND $m<=em))");
         $exam_time = $model->selectWith($select)->toArray();
         if (is_array($exam_time) && count($exam_time) > 0) {
             $model = new \Application\Model\Table('');
@@ -349,7 +350,7 @@ class ThiController extends AbstractActionController
         ) {
             $questions = array();
         } else {
-            $questions = Question::getQuestionsByQuestionIds($questionIds);
+            $questions = \Application\Model\Question::getQuestionsByQuestionIds($questionIds);
         }
 
         if (
@@ -423,8 +424,8 @@ class ThiController extends AbstractActionController
     {
         
         $date = date('Y-m-d');
-        $h = $request['h'] ? $request['h'] : date('H');
-        $m = $request['i'] ? $request['i'] : date('i');
+        $h = $request['h'] ?? date('H');
+        $m = $request['i'] ?? date('i');
         
         $model = new \Application\Model\Table('');
         $select = new \Zend\Db\Sql\Select();
@@ -434,7 +435,7 @@ class ThiController extends AbstractActionController
             "sm"=>"sm",
             "eh"=>"eh",
             "em"=>"em"
-        ))->from('exam_time')->where("DATE(`date`)='$date' AND ($h>sh OR ($h=sh AND $m>=sm)) AND ($h < eh OR ($h=eh AND $m<=em))");
+        ),FALSE)->from('exam_time')->where("DATE(`date`)='$date' AND ($h>sh OR ($h=sh AND $m>=sm)) AND ($h < eh OR ($h=eh AND $m<=em))");
         $row = $model->selectWith($select)->toArray();
         if (is_array($row) && count($row) > 0) {
             $row=$row[0];

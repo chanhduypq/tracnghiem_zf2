@@ -44,7 +44,8 @@ class Userreview extends AbstractTableGateway {
                 ->where("user_review.id=$user_review_id")
                 ->order("user_review_detail.id ASC")
                 ;
-        $row = $this->selectWith($select)->toArray();
+        $model = new \Application\Model\Table('');
+        $row = $model->selectWith($select)->toArray();
         $count_correct = 0;
         $count_incorrect = 0;
         $questionIds = array();
