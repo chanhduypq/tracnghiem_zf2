@@ -20,7 +20,7 @@ class IndexController extends AbstractActionController
             }
         }
 
-        $loginResult = $this->params()->fromQuery('loginResult');
+        $loginResult = $this->params()->fromRoute('loginResult');
         if ($loginResult === '0') {
             $loginResult = "Thông tin bạn vừa nhập không đúng.";
             $session = new \Zend\Session\Container('base');
@@ -59,7 +59,7 @@ class IndexController extends AbstractActionController
                 $session->offsetSet('username', $this->getRequest()->getPost('username'));
                 $session->offsetSet('password', $this->getRequest()->getPost('password'));
                 
-                return $this->redirect()->toRoute('admin_index',array('loginResult'=>'0')); 
+                return $this->redirect()->toRoute('admin_index',array('loginResult'=>'0'));  
             }
         }
     }

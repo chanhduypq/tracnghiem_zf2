@@ -11,9 +11,9 @@ return array(
     'router' => array(
         'routes' => array(
             'admin_index' => array(
-                'type' => 'Zend\Mvc\Router\Http\Literal',
+                'type' => 'Segment',
                 'options' => array(
-                    'route'    => '/admin/index',
+                    'route'    => '/admin/index[/:loginResult]',
                     'defaults' => array(
                         'controller' => 'Admin\Controller\Index',
                         'action'     => 'index',
