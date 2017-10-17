@@ -884,4 +884,203 @@ class Form extends Fieldset implements FormInterface
 
         return $values;
     }
+    
+    //tuetc
+    /**
+     * @param string $table_name
+     * @return Core_Form
+     */
+    public function buildElementsAutoForFormByTableName($table_name, &$primaryName = '') 
+    {
+        $db=Zend_Db_Table::getDefaultAdapter();    	
+    	$metadata = $db->describeTable($table_name);    	   	    	
+    	if(!is_array($metadata)||count($metadata)==0){
+    		return $this;
+    	}    	
+    	$keys = array_keys($metadata);
+    	if(!is_array($keys)||count($keys)==0){
+    		return $this;
+    	}
+        /**
+         * get primary
+         */
+        $primaryName='';
+        foreach ($keys as $key){
+    		$column_difinition=$metadata[$key];
+                if ($column_difinition['PRIMARY']==true){    				
+                        $primaryName=$column_difinition['COLUMN_NAME'];
+                        break;
+                }   
+        }
+        
+    	foreach ($keys as $key){
+    		$column_difinition=$metadata[$key];    		
+    		if($column_difinition['DATA_TYPE']=='varchar'
+    		   ||$column_difinition['DATA_TYPE']=='char'		    			
+    		)
+    		{
+    			$element=new Core_Form_Element_Text($column_difinition['COLUMN_NAME']);
+    			if($column_difinition['NULLABLE']==false){
+    				$element  			
+    				->setRequired(true)
+    				;
+    				$element
+    				->addFilter ( 'StringTrim' )
+    				;
+    			}   		
+    			$element->setMaxStringLength((int)$column_difinition['LENGTH']);
+    			if($column_difinition['DEFAULT']!=null){
+    				$element->setValue($column_difinition['DEFAULT']);
+    			}
+                        if (strtolower($column_difinition['COLUMN_NAME']) == 'email') {
+                            $element->setIsEmail(TRUE);
+                            $element->setUnique(TRUE, $table_name, $excludeField = $primaryName);
+                        }
+            }
+    		elseif ($column_difinition['DATA_TYPE']=='text'
+    				||$column_difinition['DATA_TYPE']=='longtext'
+    				||$column_difinition['DATA_TYPE']=='mediumtext'
+                                ||$column_difinition['DATA_TYPE']=='tinytext'
+    				
+    		)
+    		{
+    			$element=new Core_Form_Element_Textarea($column_difinition['COLUMN_NAME']);
+    			if($column_difinition['NULLABLE']==false){
+    				$element    				
+    				->setRequired(true);
+    				$element->addFilter ( 'StringTrim' );
+    			}
+    			
+    		}
+    		elseif ($column_difinition['DATA_TYPE']=='tinyblob'
+    				||$column_difinition['DATA_TYPE']=='blob'
+    				||$column_difinition['DATA_TYPE']=='mediumblob'
+    				||$column_difinition['DATA_TYPE']=='longblob'    		
+    		)
+    		{
+    			$element=new Core_Form_Element_File($column_difinition['COLUMN_NAME']);
+    			if($column_difinition['NULLABLE']==false){
+    				$element  				
+    				->setRequired(true)
+    				;   				
+    			}
+    			 
+    		}
+    		elseif ($column_difinition['DATA_TYPE']=='int'
+    				||$column_difinition['DATA_TYPE']=='bigint'
+    				||$column_difinition['DATA_TYPE']=='tinyint'
+    				||$column_difinition['DATA_TYPE']=='smallint'
+    				||$column_difinition['DATA_TYPE']=='mediumint'    				
+    		)
+    		{    			
+    			if ($column_difinition['PRIMARY']==true){    				
+    				$element=new Core_Form_Element_Hidden($column_difinition['COLUMN_NAME']);
+                                $element->setIsPrimary(true);                                
+    			}    			
+    			else{
+    				$element=new Core_Form_Element_Text($column_difinition['COLUMN_NAME']);
+    				if($column_difinition['NULLABLE']==false){
+    					$element    					
+    					->setRequired(true);
+    					$element->addFilter ( 'StringTrim' );
+    				}
+    				$element
+    				->setValidateDigits()
+    				;
+    			}
+    			if($column_difinition['DEFAULT']!=null){    				
+    				$element->setValue($column_difinition['DEFAULT']);
+    			}
+    					    
+    		} 
+    		elseif ($column_difinition['DATA_TYPE']=='date'
+    				||$column_difinition['DATA_TYPE']=='datetime'
+    				||$column_difinition['DATA_TYPE']=='time'
+    				||$column_difinition['DATA_TYPE']=='timestamp'
+    		
+    		)
+    		{
+    			$element=new Core_Form_Element_Date($column_difinition['COLUMN_NAME']);
+                        $element->setAttrib('readonly', 'readonly');                        
+    			if($column_difinition['NULLABLE']==false){
+    				$element
+    				->setRequired(true);
+    				$element->addFilter ( 'StringTrim' );    				
+    			} 
+    			if($column_difinition['DEFAULT']!=null){
+    				$value='';
+    				if($column_difinition['DEFAULT']=='CURRENT_TIMESTAMP'){
+    					$value=date('d/m/Y');
+    				}
+    				else{    					
+    					$array=explode(" ",$column_difinition['DEFAULT']);
+    					$date=$array[0];
+    					$array=explode("-",$date);    					
+    					$value=$array[2]."/".$array[1]."/".$array[0];
+    				}    				
+    				$element->setValue($value);
+    			}
+    			$element
+    			->setValidateDate()
+    			;
+    			   			
+    		}   
+    		elseif ($column_difinition['DATA_TYPE']=='binary(1)'    				
+    		
+    		)
+    		{    			
+    			$element=new Core_Form_Element_Checkbox($column_difinition['COLUMN_NAME']);
+    			if($column_difinition['DEFAULT']!=null){
+    				$element->setValue($column_difinition['DEFAULT']);
+    			}
+    			$element
+    			->setCheckedValue(1)
+    			->setUncheckedValue(0)
+    			;
+    		}		
+    		$element->setLabel($element->getName());
+    		$this->addElement($element);
+    	}   	
+    	return $this;
+    }
+//    tuetc
+    /**
+     * @param string $table_name
+     * @return Core_Form
+     */
+    public function buildElementsAutoForFormByFileTableName($table_name){
+    	$db=Zend_Db_Table::getDefaultAdapter();
+    	$metadata = $db->describeTable($table_name);
+    	if(!is_array($metadata)||count($metadata)==0){
+    		return $this;
+    	}
+    	$keys = array_keys($metadata);
+    	if(!is_array($keys)||count($keys)==0){
+    		return $this;
+    	}
+    	foreach ($keys as $key){
+    		$column_difinition=$metadata[$key];   		
+    		if ($column_difinition['DATA_TYPE']=='tinyblob'
+    				||$column_difinition['DATA_TYPE']=='blob'
+    				||$column_difinition['DATA_TYPE']=='mediumblob'
+    				||$column_difinition['DATA_TYPE']=='longblob'
+    		)
+    		{
+    			$element=new Core_Form_Element_File($column_difinition['COLUMN_NAME']);
+    			$element
+    			->setForInsertDB(true)
+    			->setRequired(true)
+    			;
+    			
+    
+    		}
+    		else{
+    			$element=new Core_Form_Element_Hidden($column_difinition['COLUMN_NAME']);
+    		}
+    		
+    		$element->setLabel($element->getName());
+    		$this->addElement($element);
+    	}
+    	return $this;
+    }
 }

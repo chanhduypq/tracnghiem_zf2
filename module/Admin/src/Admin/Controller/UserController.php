@@ -9,7 +9,7 @@ class UserController extends AbstractActionController {
     public function onDispatch(\Zend\Mvc\MvcEvent $e)
     {        
         $this->model = new \Application\Model\User();
-//        $this->form = new Admin_Form_User();
+        $this->form = new \Admin\Form\User();
         parent::onDispatch($e);
     }
 
@@ -41,6 +41,7 @@ class UserController extends AbstractActionController {
 //        $this->view->page = $this->params()->fromQuery('page');
 //
 //        $this->renderScript = 'user/add.phtml';
+        $params['form']= $this->form;
         return new ViewModel($params);
     }
 

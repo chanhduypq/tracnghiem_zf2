@@ -190,7 +190,7 @@ abstract class AbstractActionController extends AbstractController
         }
         if ($this->params()->fromPost()) {
             if ($this->form->isValid($this->formData)) {
-                Core_Common_Form::processSpecialInput($this->form, $this->formData);
+                \Zend\Common\Form::processSpecialInput($this->form, $this->formData);
                 if ($this->model->createRow($this->formData)->save()) {
                     $session = new \Zend\Session\Container('base');
                     $session->offsetSet('message', 'Thêm mới thành công');
@@ -217,7 +217,7 @@ abstract class AbstractActionController extends AbstractController
         }
         if ($this->params()->fromPost()) {            
             if ($this->form->isValid($this->formData)) {
-                Core_Common_Form::processSpecialInput($this->form, $this->formData);
+                \Zend\Common\Form::processSpecialInput($this->form, $this->formData);
                 $this->model->update($this->formData, 'id=' . $this->formData['id']);
                 $session = new \Zend\Session\Container('base');
                 $session->offsetSet('message', 'Sửa thành công');
