@@ -31,7 +31,7 @@ class HomecontentController extends AbstractActionController
         } else {
             Core::message()->addSuccess('Bị lỗi. Gọi điện cho Tuệ');
         }
-        return $this->redirect()->toUrl('/admin/homecontent'); 
+        return $this->redirect()->toRoute('admin_homecontent'); 
     }
 
 }

@@ -47,7 +47,7 @@ class QuestionController extends AbstractActionController
 
                     $session = new \Zend\Session\Container('base');$session->offsetSet('message', 'Thêm mới thành công');
                     
-                    return $this->redirect()->toUrl('/admin/question?page='.$this->params()->fromQuery('page')); 
+                    return $this->redirect()->toRoute('/admin/question?page='.$this->params()->fromQuery('page')); 
                 } else {
                     $this->view->message = 'Lỗi. Xử lý thất bại.';
                     $form->populate($formData);
@@ -79,7 +79,7 @@ class QuestionController extends AbstractActionController
 
                 if ($mapper->createRow($formData)->save()) {
                     $session = new \Zend\Session\Container('base');$session->offsetSet('message', 'Thêm mới thành công');
-                    return $this->redirect()->toUrl('/admin/question?page='.$this->params()->fromQuery('page')); 
+                    return $this->redirect()->toRoute('/admin/question?page='.$this->params()->fromQuery('page')); 
                 } else {
                     $this->view->message = 'Lỗi. Xử lý thất bại.';
                     $form->populate($formData);
@@ -146,7 +146,7 @@ class QuestionController extends AbstractActionController
                 }
 
                 $session = new \Zend\Session\Container('base');$session->offsetSet('message', 'Sửa thành công');
-                return $this->redirect()->toUrl('/admin/question?page='.$this->params()->fromQuery('page')); 
+                return $this->redirect()->toRoute('/admin/question?page='.$this->params()->fromQuery('page')); 
             } else {
                 $form->populate($formData);
                 if ($dap_an != NULL) {
@@ -188,7 +188,7 @@ class QuestionController extends AbstractActionController
                 $formData['sign'] = strtoupper($formData['sign']);
                 $mapper->update($formData, 'id=' . $formData['id']);
                 $session = new \Zend\Session\Container('base');$session->offsetSet('message', 'Sửa thành công');
-                return $this->redirect()->toUrl('/admin/question?page='.$this->params()->fromQuery('page')); 
+                return $this->redirect()->toRoute('/admin/question?page='.$this->params()->fromQuery('page')); 
             } else {
                 $form->populate($formData);
             }
@@ -207,7 +207,7 @@ class QuestionController extends AbstractActionController
 
         
         if (\Zend\Common\Numeric::isInteger($answer_id) == FALSE && \Zend\Common\Numeric::isInteger($question_id) == FALSE) {
-            return $this->redirect()->toUrl('/admin/question'); 
+            return $this->redirect()->toRoute('admin_question'); 
         }
 
         if (\Zend\Common\Numeric::isInteger($question_id)) {
@@ -232,7 +232,7 @@ class QuestionController extends AbstractActionController
         }
 
         $session = new \Zend\Session\Container('base');$session->offsetSet('message', 'Xóa thành công');
-        return $this->redirect()->toUrl('/admin/question'); 
+        return $this->redirect()->toRoute('admin_question'); 
     }
 
 }

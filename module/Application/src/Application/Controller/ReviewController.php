@@ -94,7 +94,7 @@ class ReviewController extends AbstractActionController {
         $modelUserExam = new \Application\Model\Userreview();
         $row =$modelUserExam->select("user_id=" . $this->getUserId() . " ORDER BY review_date DESC LIMIT 1")->toArray();        
         if (!is_array($row) || count($row) == 0) {
-            return $this->redirect()->toUrl('/application/review');   
+            return $this->redirect()->toRoute('/application/review');   
         }
         $row=$row[0];
         $html = \Application\Model\Userreview::getHtmlForReviewResult($row['id'], $title_header);
@@ -114,7 +114,7 @@ class ReviewController extends AbstractActionController {
             if (isset($data['question_id'])) {//trả lời câu hỏi xong và nhấn nút hoàn tất
                 $this->saveDB($data);
                 $this->resetSession();
-                return $this->redirect()->toUrl('/application/review');   
+                return $this->redirect()->toRoute('/application/review');   
             } else {//hệ thống đang ở trạng thái submit của việc [chọn ngành nghề, cấp bậc; sau đó nhấn nút bắt đầu]. Có thể vừa nhấn nút bắt đầu hoặc reload page
 
                 if (isset($identity['examing_review']) && $identity['examing_review'] == true) {//reload page

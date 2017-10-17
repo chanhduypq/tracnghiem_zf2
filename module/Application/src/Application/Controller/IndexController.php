@@ -48,7 +48,7 @@ class IndexController extends AbstractActionController {
     public function logoutAction() {
         $session = new Container('base');
         $session->offsetUnset('user');
-        return $this->redirect()->toUrl('/application_index');   
+        return $this->redirect()->toRoute('/application_index');   
     }
 
     public function logoutajaxAction() {

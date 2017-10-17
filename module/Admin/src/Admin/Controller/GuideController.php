@@ -56,7 +56,7 @@ class GuideController extends AbstractActionController
         }
 
         
-        return $this->redirect()->toUrl('/admin/guide'); 
+        return $this->redirect()->toRoute('admin_guide'); 
     }
 
 }

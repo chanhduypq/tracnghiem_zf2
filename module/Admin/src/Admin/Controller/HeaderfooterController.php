@@ -22,7 +22,7 @@ class HeaderfooterController extends AbstractActionController
             
             $mapper_footer->save(array('text'=>$data['footer_text']));
             $session = new \Zend\Session\Container('base');$session->offsetSet('message', 'Lưu thành công');
-            return $this->redirect()->toUrl('/admin/headerfooter'); 
+            return $this->redirect()->toRoute('admin_headerfooter'); 
         }
         
         $row= $mapper_header->getData();

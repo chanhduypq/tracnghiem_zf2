@@ -10,7 +10,7 @@
 return array(
     'router' => array(
         'routes' => array(
-            'home' => array(
+            'admin_index' => array(
                 'type' => 'Zend\Mvc\Router\Http\Literal',
                 'options' => array(
                     'route'    => '/admin/index',
@@ -20,7 +20,7 @@ return array(
                     ),
                 ),
             ),
-            'homelogout' => array(
+            'admin_index_logout' => array(
                 'type' => 'Zend\Mvc\Router\Http\Literal',
                 'options' => array(
                     'route'    => '/admin/index/logout',
@@ -30,7 +30,7 @@ return array(
                     ),
                 ),
             ),
-            'homelogin' => array(
+            'admin_index_login' => array(
                 'type' => 'Zend\Mvc\Router\Http\Literal',
                 'options' => array(
                     'route'    => '/admin/index/login',
@@ -40,7 +40,7 @@ return array(
                     ),
                 ),
             ),
-            'home1' => array(
+            'admin_exam' => array(
                 'type' => 'Zend\Mvc\Router\Http\Literal',
                 'options' => array(
                     'route'    => '/admin/exam',
@@ -50,7 +50,7 @@ return array(
                     ),
                 ),
             ),
-            'home2' => array(
+            'admin_excel' => array(
                 'type' => 'Zend\Mvc\Router\Http\Literal',
                 'options' => array(
                     'route'    => '/admin/excel',
@@ -60,7 +60,7 @@ return array(
                     ),
                 ),
             ),
-            'home3' => array(
+            'admin_guide' => array(
                 'type' => 'Zend\Mvc\Router\Http\Literal',
                 'options' => array(
                     'route'    => '/admin/guide',
@@ -70,7 +70,7 @@ return array(
                     ),
                 ),
             ),
-            'home4' => array(
+            'admin_headerpdf' => array(
                 'type' => 'Zend\Mvc\Router\Http\Literal',
                 'options' => array(
                     'route'    => '/admin/headerpdf',
@@ -80,7 +80,7 @@ return array(
                     ),
                 ),
             ),
-            'home5' => array(
+            'admin_headerfooter' => array(
                 'type' => 'Zend\Mvc\Router\Http\Literal',
                 'options' => array(
                     'route'    => '/admin/headerfooter',
@@ -90,7 +90,7 @@ return array(
                     ),
                 ),
             ),
-            'home6' => array(
+            'admin_image' => array(
                 'type' => 'Zend\Mvc\Router\Http\Literal',
                 'options' => array(
                     'route'    => '/admin/image',
@@ -100,7 +100,7 @@ return array(
                     ),
                 ),
             ),
-            'home7' => array(
+            'admin_homecontent' => array(
                 'type' => 'Zend\Mvc\Router\Http\Literal',
                 'options' => array(
                     'route'    => '/admin/homecontent',
@@ -110,7 +110,7 @@ return array(
                     ),
                 ),
             ),
-            'home8' => array(
+            'admin_menu' => array(
                 'type' => 'Zend\Mvc\Router\Http\Literal',
                 'options' => array(
                     'route'    => '/admin/menu',
@@ -120,7 +120,7 @@ return array(
                     ),
                 ),
             ),
-            'home9' => array(
+            'admin_nganhnghe' => array(
                 'type' => 'Zend\Mvc\Router\Http\Literal',
                 'options' => array(
                     'route'    => '/admin/nganhnghe',
@@ -130,7 +130,7 @@ return array(
                     ),
                 ),
             ),
-            'home10' => array(
+            'admin_question' => array(
                 'type' => 'Zend\Mvc\Router\Http\Literal',
                 'options' => array(
                     'route'    => '/admin/question',
@@ -140,7 +140,7 @@ return array(
                     ),
                 ),
             ),
-            'home11' => array(
+            'admin_user' => array(
                 'type' => 'Zend\Mvc\Router\Http\Literal',
                 'options' => array(
                     'route'    => '/admin/user',

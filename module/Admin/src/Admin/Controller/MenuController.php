@@ -23,7 +23,7 @@ class MenuController extends AbstractActionController
             }
             $session = new \Zend\Session\Container('base');$session->offsetSet('message', 'Lưu thành công');
             
-            return $this->redirect()->toUrl('/admin/menu'); 
+            return $this->redirect()->toRoute('admin_menu'); 
         }
         
         $this->view->data = $mapper->getData();

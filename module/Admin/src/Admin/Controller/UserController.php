@@ -79,7 +79,7 @@ class UserController extends AbstractActionController {
         
         $adapter = new \Zend\Db\Adapter\Adapter();
         $adapter->createStatement('UPDATE user_exam SET allow_re_exam=1 WHERE id=' . $exam_id)->execute();
-        return $this->redirect()->toUrl('/admin/user/edit?id='.$user_id); 
+        return $this->redirect()->toRoute('/admin/user/edit?id='.$user_id); 
     }
 
     public function cancelreexamAction() {
@@ -89,7 +89,7 @@ class UserController extends AbstractActionController {
         $adapter = new \Zend\Db\Adapter\Adapter();
         $adapter->createStatement('UPDATE user_exam SET allow_re_exam=0 WHERE id=' . $exam_id)->execute();
         
-        return $this->redirect()->toUrl('/admin/user/edit?id='.$user_id); 
+        return $this->redirect()->toRoute('/admin/user/edit?id='.$user_id); 
     }
 
     public function ketquathiAction() {

@@ -33,7 +33,7 @@ class HeaderpdfController extends AbstractActionController
         } else {
             Core::message()->addSuccess('Bị lỗi. Gọi điện cho Tuệ');
         }
-        return $this->redirect()->toUrl('/admin/headerpdf'); 
+        return $this->redirect()->toRoute('admin_headerpdf'); 
     }
 
 }

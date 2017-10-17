@@ -29,7 +29,7 @@ class ThiController extends AbstractActionController
         $select->from('user_exam')->where("user_id=".$this->getUserId())->order("exam_date DESC");
         $row = $model->selectWith($select)->toArray();
         if (!is_array($row) || count($row) == 0) {
-            return $this->redirect()->toUrl('/application/thi');   
+            return $this->redirect()->toRoute('/application/thi');   
         }
         $html = UserExam::getHtmlForExamResult($row['id'], $title_header);
 
@@ -238,7 +238,7 @@ class ThiController extends AbstractActionController
         $this->resetSession();
         $session = new Container('base');
         $session->offsetSet('success', 'Chúc mừng bạn đã hoàn thành kỳ thi lần này.');
-        return $this->redirect()->toUrl('/application/thi'); 
+        return $this->redirect()->toRoute('/application/thi'); 
         exit;
     }
 
@@ -248,7 +248,7 @@ class ThiController extends AbstractActionController
         $this->resetSession();
         $session = new Container('base');
         $session->offsetSet('success', 'Chúc mừng bạn đã hoàn thành kỳ thi lần này.');        
-        return $this->redirect()->toUrl('/application/thi');   
+        return $this->redirect()->toRoute('/application/thi');   
         exit;
     }
 

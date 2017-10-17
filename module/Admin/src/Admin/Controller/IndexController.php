@@ -16,7 +16,7 @@ class IndexController extends AbstractActionController
         if ($session->offsetExists('user')) {
             $identity = $session->offsetGet('user');
             if (isset($identity['user']) && $identity['user'] == 'admin') {
-                return $this->redirect()->toUrl('/admin/nganhnghe'); 
+                return $this->redirect()->toRoute('admin_nganhnghe'); 
             }
         }
 
@@ -25,8 +25,7 @@ class IndexController extends AbstractActionController
             $loginResult = "Thông tin bạn vừa nhập không đúng.";
             $session = new \Zend\Session\Container('base');
             $username=$session->offsetGet('username');
-            $password=$session->offsetGet('password');
-            $session->unsetAll();
+            $password=$session->offsetGet('password');            
         }
         else{
             $loginResult='';
@@ -37,11 +36,12 @@ class IndexController extends AbstractActionController
 
     public function loginAction() 
     {
+        
         $username = $this->getRequest()->getPost('username', null);
         $password = $this->getRequest()->getPost('password', null);
         if ($username == null || $password == NULL) {
             
-            return $this->redirect()->toUrl('/admin/index'); 
+            return $this->redirect()->toRoute('admin_index'); 
         } else {
             $index = new \Admin\Model\IndexMapper();
             if ($index->loginAdmin($username, $password)) {
@@ -51,14 +51,15 @@ class IndexController extends AbstractActionController
                 if ($controller == NULL) {
                     $controller = 'nganhnghe';
                 }
-                return $this->redirect()->toUrl('/admin/'.$controller); 
+                
+                return $this->redirect()->toRoute('admin_'.$controller); 
             } else {
                 
                 $session = new \Zend\Session\Container('base');
                 $session->offsetSet('username', $this->getRequest()->getPost('username'));
                 $session->offsetSet('password', $this->getRequest()->getPost('password'));
                 
-                return $this->redirect()->toUrl('/admin/index?loginResult=0'); 
+                return $this->redirect()->toRoute('admin_index',array('loginResult'=>'0')); 
             }
         }
     }
@@ -67,7 +68,7 @@ class IndexController extends AbstractActionController
     {
         $session = new \Zend\Session\Container('base');
         $session->offsetUnset('user');
-        return $this->redirect()->toUrl('/admin/index'); 
+        return $this->redirect()->toRoute('admin_index'); 
         
     }
 

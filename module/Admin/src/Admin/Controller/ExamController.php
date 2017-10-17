@@ -19,7 +19,7 @@ class ExamController extends AbstractActionController
             if (ctype_digit($data['phut']) && ctype_digit($data['number'])) {
                 $this->saveDB($data);
                 $session = new \Zend\Session\Container('base');$session->offsetSet('message', 'Lưu thành công');
-                return $this->redirect()->toUrl('/admin/exam'); 
+                return $this->redirect()->toRoute('admin_exam'); 
             }
             else{
                 

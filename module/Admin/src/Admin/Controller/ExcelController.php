@@ -45,7 +45,7 @@ class ExcelController extends AbstractActionController {
             $session = new \Zend\Session\Container('base');$session->offsetSet('message', 'Lưu thành công');
         }
 
-        return $this->redirect()->toUrl('/admin/excel'); 
+        return $this->redirect()->toRoute('admin_excel'); 
 
     }
 
