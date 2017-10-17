@@ -63,13 +63,13 @@ abstract class AbstractActionController extends AbstractController
 
     /**
      *
-     * @var Core_Form
+     * @var 
      */
     public $form = null;
 
     /**
      *
-     * @var Core_Db_Table_Abstract
+     * @var 
      */
     public $model = null;
 
@@ -85,13 +85,13 @@ abstract class AbstractActionController extends AbstractController
      */
     public $renderScript = NULL;
     
-    private function setLayout() {
+    public function setLayout() {
         if (strpos($this->params('controller'), 'Application') !== FALSE) {
             $this->layout('layout/index');           
         }
     }
     
-    private function redirectIfNotLogin() {
+    public function redirectIfNotLogin() {
         if (strpos($this->params('controller'), 'Admin') !== FALSE) {
             if (strpos($this->params('controller'), 'Index') === FALSE) {
                 $session = new \Zend\Session\Container('base');
@@ -324,6 +324,8 @@ abstract class AbstractActionController extends AbstractController
         $this->setLayout();
         $this->redirectIfNotLogin();
         $routeMatch = $e->getRouteMatch();
+//        var_dump($routeMatch->getMatchedRouteName());
+//        exit;
         if (!$routeMatch) {
             /**
              * @todo Determine requirements for when route match is missing.

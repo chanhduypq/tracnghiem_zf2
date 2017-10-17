@@ -12,10 +12,12 @@ class ThiController extends AbstractActionController
      *
      * @return void
      */
-//    public function init() {
-//        parent::init();
+    public function onDispatch(\Zend\Mvc\MvcEvent $e)
+    {        
+
 //        $this->view->headTitle('Thi trắc nghiệm', true);
-//    }
+        parent::onDispatch($e);
+    }
     
     public $param = array();
 

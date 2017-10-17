@@ -99,7 +99,7 @@ class Question extends AbstractTableGateway {
                     ->where("nganhnghe_question.nganhnghe_id=$nganhNgheId AND question.level=1")
                     ->order(new \Zend\Db\Sql\Expression('RAND()'))
                     ->limit($config_exam_number)
-                    ->quantifier('DISTINCT')
+                    ->quantifier(\Zend\Db\Sql\Select::QUANTIFIER_DISTINCT)
             ;
             $rows = $model->selectWith($select)->toArray();
         } else if ($level == '2' || $level == '3') {//nếu là bậc 2/3
@@ -118,7 +118,7 @@ class Question extends AbstractTableGateway {
                         ->where("nganhnghe_question.nganhnghe_id=$nganhNgheId AND question.level=2")
                         ->order(new \Zend\Db\Sql\Expression('RAND()'))
                         ->limit($config_exam_number)
-                        ->quantifier('DISTINCT')
+                        ->quantifier(\Zend\Db\Sql\Select::QUANTIFIER_DISTINCT)
                 ;
                 $rows = $model->selectWith($select)->toArray();
                 if (count($rows) < $config_exam_number) {//nếu lấy chưa đủ thi phải lấy thêm b1 bù vào cho đủ $config_exam_number
@@ -130,7 +130,7 @@ class Question extends AbstractTableGateway {
                             ->where("nganhnghe_question.nganhnghe_id=$nganhNgheId AND question.level=1")
                             ->order(new \Zend\Db\Sql\Expression('RAND()'))
                             ->limit($number)
-                            ->quantifier('DISTINCT')
+                            ->quantifier(\Zend\Db\Sql\Select::QUANTIFIER_DISTINCT)
                     ;
                     $rows = array_merge($rows, $model->selectWith($select)->toArray());
                 }
@@ -144,7 +144,7 @@ class Question extends AbstractTableGateway {
                         ->where("nganhnghe_question.nganhnghe_id=$nganhNgheId AND question.level=2")
                         ->order(new \Zend\Db\Sql\Expression('RAND()'))
                         ->limit($b2Number)
-                        ->quantifier('DISTINCT')
+                        ->quantifier(\Zend\Db\Sql\Select::QUANTIFIER_DISTINCT)
                 ;
                 $rows = $model->selectWith($select)->toArray();
 
@@ -161,7 +161,7 @@ class Question extends AbstractTableGateway {
                         ->where("nganhnghe_question.nganhnghe_id=$nganhNgheId AND question.level=1")
                         ->order(new \Zend\Db\Sql\Expression('RAND()'))
                         ->limit($b1Number)
-                        ->quantifier('DISTINCT')
+                        ->quantifier(\Zend\Db\Sql\Select::QUANTIFIER_DISTINCT)
                 ;
                 $rows = array_merge($rows, $model->selectWith($select)->toArray());
             }
@@ -184,7 +184,7 @@ class Question extends AbstractTableGateway {
                         ->where("nganhnghe_question.nganhnghe_id=$nganhNgheId AND question.level=3")
                         ->order(new \Zend\Db\Sql\Expression('RAND()'))
                         ->limit($b2Number)
-                        ->quantifier('DISTINCT')
+                        ->quantifier(\Zend\Db\Sql\Select::QUANTIFIER_DISTINCT)
                 ;
                 $rows = $model->selectWith($select)->toArray();
                 if (count($rows) < $config_exam_number) {//nếu lấy chưa đủ thi phải lấy thêm b1,b2 bù vào cho đủ $config_exam_number
@@ -197,7 +197,7 @@ class Question extends AbstractTableGateway {
                             ->where("nganhnghe_question.nganhnghe_id=$nganhNgheId AND question.level<=2")
                             ->order(new \Zend\Db\Sql\Expression('RAND()'))
                             ->limit($number)
-                            ->quantifier('DISTINCT')
+                            ->quantifier(\Zend\Db\Sql\Select::QUANTIFIER_DISTINCT)
                     ;
                     $rows = array_merge($rows, $model->selectWith($select)->toArray());
                 }
@@ -210,7 +210,7 @@ class Question extends AbstractTableGateway {
                         ->where("nganhnghe_question.nganhnghe_id=$nganhNgheId AND question.level=3")
                         ->order(new \Zend\Db\Sql\Expression('RAND()'))
                         ->limit($b3Number)
-                        ->quantifier('DISTINCT')
+                        ->quantifier(\Zend\Db\Sql\Select::QUANTIFIER_DISTINCT)
                 ;
                 $rows = $model->selectWith($select)->toArray();
 
@@ -223,7 +223,7 @@ class Question extends AbstractTableGateway {
                         ->where("nganhnghe_question.nganhnghe_id=$nganhNgheId AND question.level=2")
                         ->order(new \Zend\Db\Sql\Expression('RAND()'))
                         ->limit($b2Number)
-                        ->quantifier('DISTINCT')
+                        ->quantifier(\Zend\Db\Sql\Select::QUANTIFIER_DISTINCT)
                 ;
                 $rows = array_merge($rows, $model->selectWith($select)->toArray());
 
@@ -240,7 +240,7 @@ class Question extends AbstractTableGateway {
                         ->where("nganhnghe_question.nganhnghe_id=$nganhNgheId AND question.level=1")
                         ->order(new \Zend\Db\Sql\Expression('RAND()'))
                         ->limit($b1Number)
-                        ->quantifier('DISTINCT')
+                        ->quantifier(\Zend\Db\Sql\Select::QUANTIFIER_DISTINCT)
                 ;
                 $rows = array_merge($rows, $model->selectWith($select)->toArray());
 
@@ -257,7 +257,7 @@ class Question extends AbstractTableGateway {
                                 ->where("nganhnghe_question.nganhnghe_id=$nganhNgheId AND question.level<=3 AND question.id NOT IN (" . implode(",", $tempIds) . ")")
                                 ->order(new \Zend\Db\Sql\Expression('RAND()'))
                                 ->limit($config_exam_number - count($rows))
-                                ->quantifier('DISTINCT')
+                                ->quantifier(\Zend\Db\Sql\Select::QUANTIFIER_DISTINCT)
                         ;
                         $rows = array_merge($rows, $model->selectWith($select)->toArray());
                     }
@@ -289,7 +289,7 @@ class Question extends AbstractTableGateway {
                 ->join("question", "question.id=nganhnghe_question.question_id",array())
                 ->where("nganhnghe_question.nganhnghe_id=$nganhNgheId AND question.level<=$level")
                 ->order("question.id ASC")
-                ->quantifier('DISTINCT')
+                ->quantifier(\Zend\Db\Sql\Select::QUANTIFIER_DISTINCT)
         ;
 
         

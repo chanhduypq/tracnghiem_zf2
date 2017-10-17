@@ -6,10 +6,11 @@ use Zend\View\Model\ViewModel;
 use Zend\Session\Container;
 class QuestionController extends AbstractActionController {
 
-//    public function init() {
-//        parent::init();
+    public function onDispatch(\Zend\Mvc\MvcEvent $e)
+    {        
 //        $this->view->headTitle('Ngân hàng câu hỏi', true);
-//    }
+        parent::onDispatch($e);
+    }
 
     
 

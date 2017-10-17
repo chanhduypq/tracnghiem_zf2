@@ -26,9 +26,12 @@ if (isset($this->message)&&trim($this->message)!='') {
 <div class="row-fluid" style="padding-top:20px;">
     <div class="span12">
         <?php     
-        $buttons[]=array('onclick'=>"window.location = '".$this->basePath('/admin/nganhnghe/add/')."'",'label'=>'Thêm ngành nghề');
-        echo $this->toolbar($buttons);
+//        $buttons[]=array('onclick'=>"window.location = '".$this->basePath('/admin/nganhnghe/add/')."'",'label'=>'Thêm ngành nghề');
+//        echo $this->toolbar($buttons);
         ?>
+        <div class="span12" style="margin-bottom: 20px;text-align: right;">
+            <input onclick="window.location = '<?php echo $this->basePath();?>/admin/nganhnghe/add'" type="button" value="Thêm ngành nghề" class="button">          
+        </div>
     </div>
 </div>
 <?php if (count($items) > 0) { ?>

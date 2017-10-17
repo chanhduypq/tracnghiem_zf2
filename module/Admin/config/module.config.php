@@ -30,6 +30,16 @@ return array(
                     ),
                 ),
             ),
+            'homelogin' => array(
+                'type' => 'Zend\Mvc\Router\Http\Literal',
+                'options' => array(
+                    'route'    => '/admin/index/login',
+                    'defaults' => array(
+                        'controller' => 'Admin\Controller\Index',
+                        'action'     => 'login',
+                    ),
+                ),
+            ),
             'home1' => array(
                 'type' => 'Zend\Mvc\Router\Http\Literal',
                 'options' => array(

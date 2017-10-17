@@ -13,13 +13,13 @@ class NganhngheController extends AbstractActionController
     {
         $mapper = new \Application\Model\Nganhnghe();
         $rows = $mapper->getNganhNghes();
-        $this->view->items = $rows;
-        
+        return new ViewModel(array('items'=>$rows));
         
     }
 
     public function addAction() 
     {
+        $params=array();
         $form = new Admin_Form_Nganhnghe();
 
         $question_ids = array();
@@ -48,7 +48,7 @@ class NganhngheController extends AbstractActionController
                     
                     return $this->redirect()->toUrl('/admin/nganhnghe'); 
                 } else {
-                    $this->view->message = 'Lỗi. Xử lý thất bại.';
+                    $params['message'] = 'Lỗi. Xử lý thất bại.';
                     $form->populate($formData);
                 }
             } else {
@@ -56,8 +56,9 @@ class NganhngheController extends AbstractActionController
             }
         }
 
-        $this->view->form = $form;
-        $this->view->question_ids=$question_ids;
+        $params['form'] = $form;
+        $params['question_ids']=$question_ids;
+        return new ViewModel($params);
     }
 
     public function editAction() 

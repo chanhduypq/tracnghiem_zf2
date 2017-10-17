@@ -1,6 +1,7 @@
 <?php 
 $temp = explode('\\', $this->getHelperPluginManager()->getServiceLocator()->get('Application')->getMvcEvent()->getRouteMatch()->getParam('controller', 'index'));
 $controller_name = strtolower($temp[count($temp) - 1]);
+//var_dump($temp);
 ?>
 <div class="span12">
     <ul id="topnav">

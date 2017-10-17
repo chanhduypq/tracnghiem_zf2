@@ -6,11 +6,12 @@ use Zend\View\Model\ViewModel;
 use Zend\Session\Container;
 class UserController extends AbstractActionController {
 
-//    public function init() {
-//        parent::init();
-//        $this->model = new \Application\Model\User();
+    public function onDispatch(\Zend\Mvc\MvcEvent $e)
+    {        
+        $this->model = new \Application\Model\User();
 //        $this->form = new Admin_Form_User();
-//    }
+        parent::onDispatch($e);
+    }
 
     public function indexAction() {
 
@@ -27,7 +28,6 @@ class UserController extends AbstractActionController {
 //        $params['page'] = $this->page;
 //        $params['message'] = $this->getMessage();
      
-        $this->model = new \Application\Model\User();
         $rows = $this->model->getUsers($this->total, $this->limit, $this->start);
         $params['items'] = $rows;
         return new ViewModel($params);
@@ -47,7 +47,23 @@ class UserController extends AbstractActionController {
 
         
         $id = $this->params()->fromQuery('id');
-        $history = $db->fetchAll("select user_exam.allow_re_exam,user_exam.user_id,user_exam.nganh_nghe_id,user_exam.level,user_exam.id,user_exam.exam_date,user_pass.user_exam_id,nganh_nghe.title from user_exam JOIN nganh_nghe ON nganh_nghe.id=user_exam.nganh_nghe_id LEFT JOIN user_pass ON user_pass.user_exam_id=user_exam.id WHERE user_exam.user_id=$id ORDER BY user_exam.exam_date ASC");
+        $model = new \Application\Model\Table('');
+        $select = new \Zend\Db\Sql\Select();
+        $select
+                ->from("user_exam",array(
+                    "allow_re_exam" => "allow_re_exam",
+                    "user_id" => "user_id",
+                    "nganh_nghe_id" => "nganh_nghe_id",
+                    "level" => "level",
+                    "id" => "id",
+                    "exam_date" => "exam_date"
+                    ))
+                ->join("nganh_nghe", "nganh_nghe.id=user_exam.nganh_nghe_id",array("title" => "title"))
+                ->join("user_pass", "user_pass.user_exam_id=user_exam.id",array("user_exam_id" => "user_exam_id"),\Zend\Db\Sql\Select::JOIN_LEFT)
+                ->where("user_exam.user_id=$id")
+                ->order("user_exam.exam_date ASC")
+                ;
+        $history = $model->selectWith($select)->toArray();
         $this->view->history = $history;
 
         $this->renderScript = 'user/add.phtml';
@@ -63,7 +79,7 @@ class UserController extends AbstractActionController {
         
         $adapter = new \Zend\Db\Adapter\Adapter();
         $adapter->createStatement('UPDATE user_exam SET allow_re_exam=1 WHERE id=' . $exam_id)->execute();
-        return $this->redirect()->toUrl('/admin/user/edit/?id='.$user_id); 
+        return $this->redirect()->toUrl('/admin/user/edit?id='.$user_id); 
     }
 
     public function cancelreexamAction() {
@@ -73,7 +89,7 @@ class UserController extends AbstractActionController {
         $adapter = new \Zend\Db\Adapter\Adapter();
         $adapter->createStatement('UPDATE user_exam SET allow_re_exam=0 WHERE id=' . $exam_id)->execute();
         
-        return $this->redirect()->toUrl('/admin/user/edit/?id='.$user_id); 
+        return $this->redirect()->toUrl('/admin/user/edit?id='.$user_id); 
     }
 
     public function ketquathiAction() {
@@ -81,12 +97,17 @@ class UserController extends AbstractActionController {
         $html = \Application\Model\Userexam::getHtmlForExamResult($user_exam_id, $title_header);
 
         
-        $row = $db->fetchRow("select "
-                . "DATE_FORMAT(user_exam.exam_date,'%Y_%m_%d') AS date,"
-                . "user.id "
-                . "from user_exam "
-                . "JOIN user ON user.id=user_exam.user_id "
-                . "WHERE user_exam.id=$user_exam_id");
+        $model = new \Application\Model\Table('');
+        $select = new \Zend\Db\Sql\Select();
+        $select
+                ->from("user_exam",array(
+                    "date" => new \Zend\Db\Sql\Expression("DATE_FORMAT(user_exam.exam_date,'%Y_%m_%d')")                    
+                    ))
+                ->join("user", "user.id=user_exam.user_id",array("id" => "id"))                
+                ->where("user_exam.id=$user_exam_id")
+                ;
+        $row = $model->selectWith($select)->toArray();
+        $row=$row[0];
 
         Core_Common_Pdf::createFilePdf(Core_Common_Pdf::DOWNLOAD, $html, $row['id'] . '___' . $row['date'] . '.pdf', $title_header);
     }

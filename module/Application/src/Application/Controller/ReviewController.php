@@ -6,10 +6,11 @@ use Zend\View\Model\ViewModel;
 use Zend\Session\Container;
 class ReviewController extends AbstractActionController {
 
-//    public function init() {
-//        parent::init();
+    public function onDispatch(\Zend\Mvc\MvcEvent $e)
+    {        
 //        $this->view->headTitle('Thi thử - Ôn tập', true);
-//    }
+        parent::onDispatch($e);
+    }
 
     private function saveDB($data) {
 //        

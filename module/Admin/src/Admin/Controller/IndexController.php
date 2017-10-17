@@ -10,7 +10,7 @@ class IndexController extends AbstractActionController
 
 
     public function indexAction() 
-    {
+    {        
         $username = $password = '';
         $session = new \Zend\Session\Container('base');
         if ($session->offsetExists('user')) {
@@ -48,7 +48,9 @@ class IndexController extends AbstractActionController
                 $session = new \Zend\Session\Container('base');
                 $controller = $session->offsetGet('controller');
                 $session->offsetUnset('controller');
-                
+                if ($controller == NULL) {
+                    $controller = 'nganhnghe';
+                }
                 return $this->redirect()->toUrl('/admin/'.$controller); 
             } else {
                 
@@ -56,7 +58,7 @@ class IndexController extends AbstractActionController
                 $session->offsetSet('username', $this->getRequest()->getPost('username'));
                 $session->offsetSet('password', $this->getRequest()->getPost('password'));
                 
-                return $this->redirect()->toUrl('/admin/index/?loginResult=0'); 
+                return $this->redirect()->toUrl('/admin/index?loginResult=0'); 
             }
         }
     }
