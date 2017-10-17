@@ -24,17 +24,22 @@ if (isset($this->message)&&trim($this->message)!='') {
 ?>
 <div class="row-fluid" style="margin-top: 10px;">
     <?php     
-    $buttons[]=array('onclick'=>"window.location = '".$this->basePath('/admin/user/index/page/'.$this->page)."'",'label'=>'Quay lại');
-    $buttons[]=array('onclick'=>'document.form.submit();','label'=>'Lưu');
-    echo $this->toolbar($buttons);
+//    $buttons[]=array('onclick'=>"window.location = '".$this->basePath('/admin/user/index/page/'.$this->page)."'",'label'=>'Quay lại');
+//    $buttons[]=array('onclick'=>'document.form.submit();','label'=>'Lưu');
+//    echo $this->toolbar($buttons);
     ?>
+    <div class="span12" style="margin-bottom: 20px;text-align: right;">
+        <input onclick="window.location = '<?php echo $this->basePath();?>/admin/user/index/page/1'" type="button" value="Quay lại" class="button">
+        <input onclick="document.form.submit();" type="button" value="Lưu" class="button">
+                        
+    </div>
 </div>
 <form name="form" enctype="multipart/form-data" id="form" action="<?php echo $this->url(); ?>" method="post">
     <div class="row-fluid" style="margin-top: 10px;">
         <div class="span4"></div>
 
         <div class="span12">
-            <?php echo $this->form($this, $this->form, 1, $echo_form_tag = FALSE); ?>
+            <?php // echo $this->form($this, $this->form, 1, $echo_form_tag = FALSE); ?>
         </div>
 
     </div>

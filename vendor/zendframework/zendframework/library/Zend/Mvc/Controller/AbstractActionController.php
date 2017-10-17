@@ -97,12 +97,12 @@ abstract class AbstractActionController extends AbstractController
                 $session = new \Zend\Session\Container('base');
                 if (!$session->offsetExists('user')) {
                     $this->turnSessionPrevController();
-                    return $this->redirect()->toUrl('/admin/index'); 
+                    return $this->redirect()->toRoute('admin_index'); 
                 } else {
                     $identity = $session->offsetGet('user');
                     if (!isset($identity['user']) || $identity['user'] != 'admin') {
                         $this->turnSessionPrevController();
-                        return $this->redirect()->toUrl('/admin/index'); 
+                        return $this->redirect()->toRoute('admin_index'); 
                     }
                 }
             }
@@ -110,7 +110,7 @@ abstract class AbstractActionController extends AbstractController
             if (strpos($this->params('controller'), 'Index') === FALSE && strpos($this->params('controller'), 'question') === FALSE) {
                 $session = new \Zend\Session\Container('base');
                 if (!$session->offsetExists('user')) {
-                    return $this->redirect()->toUrl('/application_index'); 
+                    return $this->redirect()->toRoute('application_index'); 
                 }
             }
         }
@@ -171,10 +171,9 @@ abstract class AbstractActionController extends AbstractController
     }
     
     public function dispatch(\Zend\Stdlib\RequestInterface $request, \Zend\Stdlib\ResponseInterface $response = null) {
+
         parent::dispatch($request, $response);
-        if ($this->params('action') == 'index') {
-            $this->processForIndexAction();
-        } else if ($this->params('action') == 'add') {
+        if ($this->params('action') == 'add') {
             $this->processForAddAction();
         } else if ($this->params('action') == 'edit') {
             $this->processForEditAction();
@@ -183,102 +182,76 @@ abstract class AbstractActionController extends AbstractController
         }
     }
     
-    private function processForIndexAction() {
-//        $paginator = new Zend_Paginator(new Zend_Paginator_Adapter_Null($this->total));
-//
-//        $paginator->setDefaultScrollingStyle();
-//        $paginator->setItemCountPerPage($this->limit);
-//        $paginator->setCurrentPageNumber($this->page);
-//
-//        $this->view->paginator = $paginator;
-//        $this->view->limit = $this->limit;
-//        $this->view->total = $this->total;
-//        $this->view->page = $this->page;
-//        if (!isset($this->view->message)) {
-//            $this->view->message = $this->getMessage();
-//        }
-    }
+    
 
     private function processForAddAction() {
-//        if ($this->model == NULL || $this->form == NULL) {
-//            return;
-//        }
-//        if ($this->params()->fromPost()) {
-//            if ($this->form->isValid($this->formData)) {
-//                Core_Common_Form::processSpecialInput($this->form, $this->formData);
-//                if ($this->model->createRow($this->formData)->save()) {
-//                    Core::message()->addSuccess('Thêm mới thành công');
-//                    $this->_helper->redirector('index', $this->_request->getControllerName(), $this->_request->getModuleName(), array('page' => $this->_getParam('page')));
-//                } else {
+        if ($this->model == NULL || $this->form == NULL) {
+            return;
+        }
+        if ($this->params()->fromPost()) {
+            if ($this->form->isValid($this->formData)) {
+                Core_Common_Form::processSpecialInput($this->form, $this->formData);
+                if ($this->model->createRow($this->formData)->save()) {
+                    $session = new \Zend\Session\Container('base');
+                    $session->offsetSet('message', 'Thêm mới thành công');
+                    $temp = explode('\\', $this->getServiceLocator()->get('Application')->getMvcEvent()->getRouteMatch()->getParam('controller', 'index'));
+                    $controller_name = strtolower($temp[count($temp) - 1]);
+                    $this->redirect()->toUrl("/admin/$controller_name?page=".$this->params()->fromQuery('page'));
+                } else {
+//                    tuetc
 //                    $this->view->message = 'Lỗi. Xử lý thất bại.';
-//                    $this->form->populate($this->formData);
-//                }
-//            } else {
-//                $this->form->populate($this->formData);
-//            }
-//        }
-//        if (!isset($this->view->form)) {//nếu trong addAction, chưa có dòng code này: $this->view->form = $this->form;
-//            $this->view->form = $this->form;
-//        }
-//        if ($this->renderScript == NULL) {//nếu trong addAction, k chỉ định renderScript đến .phtml nào
-//            try {
-//                $this->render('add');
-//            } catch (Exception $e) {
-//                if ($e->getCode() == 0) {
-//                    $this->renderScript('common/add.phtml');
-//                }
-//            }
-//        } else {
-//            $this->renderScript($this->renderScript);
-//        }
+                    $this->form->populate($this->formData);
+                }
+            } else {
+                $this->form->populate($this->formData);
+            }
+        }
+        
+        
     }
 
     private function processForEditAction() {
 //        tuetc
-//        if ($this->model == NULL || $this->form == NULL) {
-//            return;
-//        }
-//        if ($this->params()->fromPost()) {            
-//            if ($this->form->isValid($this->formData)) {
-//                Core_Common_Form::processSpecialInput($this->form, $this->formData);
-//                $this->model->update($this->formData, 'id=' . $this->formData['id']);
-//                Core::message()->addSuccess('Sửa thành công');
-//                $this->_helper->redirector('index', $this->_request->getControllerName(), $this->_request->getModuleName(), array('page' => $this->_getParam('page')));
-//            } else {
-//                $this->form->populate($this->formData);
-//            }
-//        } else {
-//            $row = $this->model->fetchRow("id=" . $this->_getParam('id'))->toArray();
-//            $this->form->setDefaults($row);
-//        }
-//        if (!isset($this->view->form)) {//nếu trong editAction, chưa có dòng code này: $this->view->form = $this->form;
-//            $this->view->form = $this->form;
-//        }
-//        if ($this->renderScript == NULL) {//nếu trong editAction, k chỉ định renderScript đến .phtml nào
-//            try {
-//                $this->render('add');
-//            } catch (Exception $e) {
-//                if ($e->getCode() == 0) {
-//                    $this->renderScript('common/add.phtml');
-//                }
-//            }
-//        } else {
-//            $this->renderScript($this->renderScript);
-//        }
+        if ($this->model == NULL || $this->form == NULL) {
+            return;
+        }
+        if ($this->params()->fromPost()) {            
+            if ($this->form->isValid($this->formData)) {
+                Core_Common_Form::processSpecialInput($this->form, $this->formData);
+                $this->model->update($this->formData, 'id=' . $this->formData['id']);
+                $session = new \Zend\Session\Container('base');
+                $session->offsetSet('message', 'Sửa thành công');
+                $temp = explode('\\', $this->getServiceLocator()->get('Application')->getMvcEvent()->getRouteMatch()->getParam('controller', 'index'));
+                $controller_name = strtolower($temp[count($temp) - 1]);
+                $this->redirect()->toUrl("/admin/$controller_name?page=".$this->params()->fromQuery('page'));
+            } else {
+                $this->form->populate($this->formData);
+            }
+        } else {
+            $row = $this->model->fetchRow("id=" . $this->_getParam('id'))->toArray();
+            $this->form->setDefaults($row);
+        }
+        
+        
     }
 
     private function processForDeleteAction() {
-//        if ($this->model == NULL) {
-//            return;
-//        }
-//        $id = $this->_getParam('id');
-//        if (Core_Common_Numeric::isInteger($id) == FALSE) {
-//            $this->_helper->redirector('index', $this->_request->getControllerName(), $this->_request->getModuleName());
-//            return;
-//        }
-//        $this->model->delete("id=$id");
-//        Core::message()->addSuccess('Xóa thành công');
-//        $this->_helper->redirector('index', $this->_request->getControllerName(), $this->_request->getModuleName());
+        if ($this->model == NULL) {
+            return;
+        }
+        $id = $this->params()->fromQuery('id');
+        if (\Zend\Common\Numeric::isInteger($id) == FALSE) {
+            $temp = explode('\\', $this->getServiceLocator()->get('Application')->getMvcEvent()->getRouteMatch()->getParam('controller', 'index'));
+            $controller_name = strtolower($temp[count($temp) - 1]);
+            $this->redirect()->toUrl("/admin/$controller_name");
+            return;
+        }
+        $this->model->delete("id=$id");
+        $session = new \Zend\Session\Container('base');
+        $session->offsetSet('message', 'Xóa thành công');
+        $temp = explode('\\', $this->getServiceLocator()->get('Application')->getMvcEvent()->getRouteMatch()->getParam('controller', 'index'));
+        $controller_name = strtolower($temp[count($temp) - 1]);
+        $this->redirect()->toUrl("/admin/$controller_name");
     }
 
     /**

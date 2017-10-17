@@ -148,7 +148,17 @@ return array(
                         'controller' => 'Admin\Controller\User',
                         'action'     => 'index',
                     ),
-                ),
+                ),                
+            ),
+            'admin_user_add' => array(
+                'type' => 'Zend\Mvc\Router\Http\Literal',
+                'options' => array(
+                    'route'    => '/admin/user/add',
+                    'defaults' => array(
+                        'controller' => 'Admin\Controller\User',
+                        'action'     => 'add',
+                    ),
+                ),                
             ),
             
             // The following is a route to simplify getting started creating

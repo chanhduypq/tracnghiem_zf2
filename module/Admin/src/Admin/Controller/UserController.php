@@ -34,12 +34,14 @@ class UserController extends AbstractActionController {
     }
 
     public function addAction() {
-        if (is_array($this->formData) && count($this->formData) > 0) {
-            $this->formData['password'] = sha1($this->formData['email']);
-        }
-        $this->view->page = $this->params()->fromQuery('page');
-
-        $this->renderScript = 'user/add.phtml';
+        $params= array();
+//        if (is_array($this->formData) && count($this->formData) > 0) {
+//            $this->formData['password'] = sha1($this->formData['email']);
+//        }
+//        $this->view->page = $this->params()->fromQuery('page');
+//
+//        $this->renderScript = 'user/add.phtml';
+        return new ViewModel($params);
     }
 
     public function editAction() {

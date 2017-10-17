@@ -41,8 +41,7 @@ if (isset($this->message)&&trim($this->message)!='') {
 //        echo $this->toolbar($buttons);
         ?>
         <div class="span12" style="margin-bottom: 20px;text-align: right;">
-                        <input onclick="window.location = '/admin/user/add/page/1'" type="button" value="Thêm user" class="button">
-                        
+            <input onclick="window.location = '<?php echo $this->basePath();?>/admin/user/add?page=1'" type="button" value="Thêm user" class="button">
         </div>
     </div>
 </div>

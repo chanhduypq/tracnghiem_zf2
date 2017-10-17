@@ -24,6 +24,16 @@ return array(
 //                     ),
 //                 ),
 //             ),
+            'home' => array(
+                'type' => 'Zend\Mvc\Router\Http\Literal',
+                'options' => array(
+                    'route'    => '/application_index1',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Index1',
+                        'action'     => 'index',
+                    ),
+                ),
+            ),
             'application_index' => array(
                 'type' => 'Zend\Mvc\Router\Http\Literal',
                 'options' => array(
